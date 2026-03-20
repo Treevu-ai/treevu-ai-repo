@@ -11,36 +11,70 @@ function formatCurrency(n) {
 }
 
 const QUICK_AMOUNTS = [100, 200, 300, 500]
+const MIN_AMOUNT = 50
+
+function AdvanceSteps({ current }) {
+  const steps = ['Monto', 'Confirmar', 'Listo']
+  return (
+    <div className="flex items-center justify-center px-6 py-3">
+      {steps.map((step, i) => {
+        const done = i < current
+        const active = i === current
+        return (
+          <div key={step} className="flex items-center">
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300
+                  ${done ? 'bg-[var(--color-secondary)] text-white' :
+                    active ? 'bg-[var(--color-primary)] text-white' :
+                    'bg-[var(--color-surface-container-high)] text-[var(--color-outline)]'}`}
+              >
+                {done
+                  ? <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: '"FILL" 1' }}>check</span>
+                  : i + 1}
+              </div>
+              <span className={`text-[10px] font-semibold transition-colors duration-300
+                ${active ? 'text-[var(--color-primary)]' :
+                  done ? 'text-[var(--color-secondary)]' :
+                  'text-[var(--color-outline)]'}`}>
+                {step}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <div className={`w-16 h-0.5 mx-1.5 mb-4 rounded-full transition-all duration-300
+                ${done ? 'bg-[var(--color-secondary)]' : 'bg-[var(--color-surface-container-high)]'}`}
+              />
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 function AdvanceSkeleton() {
   return (
     <div className="app-container bg-[var(--color-surface)] min-h-dvh">
       <PageHeader title="Solicitar adelanto" subtitle="Accede a tu sueldo devengado" />
       <div className="px-4 pb-safe space-y-4">
+        <Skeleton className="h-10 w-full rounded-[var(--radius)] mx-auto" />
         <Card className="p-5 space-y-2">
           <Skeleton className="h-3 w-24 rounded-full" />
           <Skeleton className="h-10 w-44 rounded-full" />
           <Skeleton className="h-3 w-48 rounded-full" />
         </Card>
-
-        <Card className="p-5 space-y-4">
+        <Card className="p-5 space-y-5">
           <Skeleton className="h-4 w-36 rounded-full" />
-          <Skeleton className="h-16 w-full rounded-[var(--radius-xl)]" />
+          <Skeleton className="h-14 w-32 rounded-full mx-auto" />
+          <Skeleton className="h-6 w-full rounded-full" />
           <div className="flex gap-2">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="flex-1 h-9 rounded-full" />
-            ))}
+            {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="flex-1 h-9 rounded-full" />)}
           </div>
         </Card>
-
         <Card className="p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <Skeleton className="h-4 w-32 rounded-full" />
-            <Skeleton className="h-3 w-16 rounded-full" />
-          </div>
+          <Skeleton className="h-4 w-32 rounded-full" />
           <Skeleton className="h-14 w-full rounded-[var(--radius-xl)]" />
         </Card>
-
         <Skeleton className="h-12 w-full rounded-[var(--radius-xl)]" />
       </div>
     </div>
@@ -54,7 +88,8 @@ export default function AdvanceRequest() {
   const setSelectedWallet = useEWAStore((s) => s.setSelectedWallet)
   const [loading, setLoading] = useState(true)
 
-  const [amount, setAmount] = useState('')
+  const maxAmount = employee.availableAdvance
+  const [amount, setAmount] = useState(Math.min(200, maxAmount))
   const [selectedW, setSelectedW] = useState(employee.wallets[0] || null)
   const [error, setError] = useState('')
 
@@ -65,17 +100,20 @@ export default function AdvanceRequest() {
 
   if (loading) return <AdvanceSkeleton />
 
-  const numAmount = parseFloat(amount) || 0
-  const isValid = numAmount >= 50 && numAmount <= employee.availableAdvance
+  const sliderPercent = maxAmount > MIN_AMOUNT
+    ? ((amount - MIN_AMOUNT) / (maxAmount - MIN_AMOUNT)) * 100
+    : 100
+
+  const isValid = amount >= MIN_AMOUNT && amount <= maxAmount && !!selectedW
+
+  const handleSlider = (e) => {
+    setAmount(Number(e.target.value))
+    setError('')
+  }
 
   const handleContinue = () => {
-    if (numAmount < 50) { setError('El monto mínimo es S/ 50'); return }
-    if (numAmount > employee.availableAdvance) {
-      setError(`El máximo disponible es ${formatCurrency(employee.availableAdvance)}`)
-      return
-    }
     if (!selectedW) { setError('Selecciona un destino de pago'); return }
-    setRequestedAmount(numAmount)
+    setRequestedAmount(amount)
     setSelectedWallet(selectedW)
     navigate('/advance/confirm')
   }
@@ -85,6 +123,8 @@ export default function AdvanceRequest() {
       <PageHeader title="Solicitar adelanto" subtitle="Accede a tu sueldo devengado" />
 
       <div className="px-4 pb-safe space-y-4">
+        <AdvanceSteps current={0} />
+
         {/* Available balance */}
         <Card className="p-5">
           <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-on-surface-variant)] mb-1">
@@ -101,45 +141,52 @@ export default function AdvanceRequest() {
           </p>
         </Card>
 
-        {/* Amount input */}
-        <Card className="p-5 space-y-4">
+        {/* Amount slider */}
+        <Card className="p-5 space-y-5">
           <p className="text-sm font-semibold text-[var(--color-on-surface)]"
             style={{ fontFamily: 'var(--font-headline)' }}>
             ¿Cuánto necesitas?
           </p>
 
-          <div className="relative flex items-center">
-            <span className="absolute left-4 text-[var(--color-on-surface)] text-lg font-bold select-none">S/</span>
+          {/* Big amount display */}
+          <div className="text-center py-1">
+            <span
+              className="font-bold text-[var(--color-primary)] transition-all duration-100"
+              style={{ fontFamily: 'var(--font-headline)', fontSize: '3rem', lineHeight: 1 }}
+            >
+              {formatCurrency(amount)}
+            </span>
+          </div>
+
+          {/* Slider */}
+          <div className="px-1">
             <input
-              type="number"
-              inputMode="decimal"
-              placeholder="0"
+              type="range"
+              min={MIN_AMOUNT}
+              max={maxAmount}
+              step={10}
               value={amount}
-              onChange={(e) => { setAmount(e.target.value); setError('') }}
-              min={50}
-              max={employee.availableAdvance}
-              className="
-                w-full h-16 rounded-[var(--radius-xl)] pl-12 pr-4
-                bg-[var(--color-surface-container-high)]
-                text-[var(--color-on-surface)] text-2xl font-bold
-                placeholder:text-[var(--color-outline)] placeholder:font-normal placeholder:text-xl
-                focus:outline-none focus:bg-[var(--color-surface-container-lowest)]
-                focus:ring-1 focus:ring-[rgba(0,6,102,0.2)]
-                transition-all duration-150
-              "
+              onChange={handleSlider}
+              style={{
+                background: `linear-gradient(to right, var(--color-primary) ${sliderPercent}%, var(--color-surface-container-high) ${sliderPercent}%)`,
+              }}
             />
+            <div className="flex justify-between mt-1.5">
+              <span className="text-[10px] text-[var(--color-outline)]">S/ {MIN_AMOUNT}</span>
+              <span className="text-[10px] text-[var(--color-outline)]">{formatCurrency(maxAmount)}</span>
+            </div>
           </div>
 
           {/* Quick select */}
-          <div className="flex gap-2 flex-wrap">
-            {QUICK_AMOUNTS.filter((q) => q <= employee.availableAdvance).map((q) => (
+          <div className="flex gap-2">
+            {QUICK_AMOUNTS.filter((q) => q <= maxAmount).map((q) => (
               <button
                 key={q}
-                onClick={() => { setAmount(String(q)); setError('') }}
+                onClick={() => { setAmount(q); setError('') }}
                 className={`
-                  flex-1 min-w-[60px] h-9 rounded-full text-sm font-medium transition-all duration-150
-                  ${numAmount === q
-                    ? 'editorial-gradient text-white'
+                  flex-1 h-9 rounded-full text-sm font-medium transition-all duration-150
+                  ${amount === q
+                    ? 'editorial-gradient text-white shadow-sm'
                     : 'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface)] active:bg-[var(--color-surface-container-highest)]'
                   }
                 `}
@@ -220,13 +267,13 @@ export default function AdvanceRequest() {
           <p className="text-xs text-[var(--color-on-surface-variant)] leading-relaxed">
             Sin intereses ni cargos para ti. El descuento de{' '}
             <span className="font-semibold text-[var(--color-on-surface)]">
-              {formatCurrency(numAmount || 0)}
+              {formatCurrency(amount)}
             </span>{' '}
             se aplicará automáticamente en tu próxima quincena.
           </p>
         </div>
 
-        <Button onClick={handleContinue} disabled={!isValid || !selectedW} className="mt-2">
+        <Button onClick={handleContinue} disabled={!isValid} className="mt-2">
           Continuar
         </Button>
       </div>

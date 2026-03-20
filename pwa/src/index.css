@@ -116,6 +116,57 @@
     padding-bottom: calc(5rem + env(safe-area-inset-bottom));
   }
 
+  /* ── Range slider ── */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 9999px;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    box-shadow: 0 2px 10px rgba(0, 6, 102, 0.35);
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.25);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-primary);
+    box-shadow: 0 2px 10px rgba(0, 6, 102, 0.35);
+    cursor: pointer;
+  }
+
+  /* ── Success celebration rings ── */
+  @keyframes ring-out {
+    0%   { transform: scale(0.6); opacity: 0.6; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  .animate-ring-out {
+    animation: ring-out 1.8s ease-out infinite;
+  }
+
+  /* ── Stagger fade-up ── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-up {
+    animation: fade-up 0.5s ease-out both;
+  }
+
   @keyframes toast-in {
     from { opacity: 0; transform: translateY(-12px) scale(0.96); }
     to   { opacity: 1; transform: translateY(0)     scale(1); }
