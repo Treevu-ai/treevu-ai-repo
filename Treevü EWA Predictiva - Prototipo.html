@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treevü — Tu salario, cuando lo necesites</title>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS RESET & VARIABLES ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #1a2332;
+  --navy-light: #243044;
+  --navy-dark: #111a26;
+  --teal: #00C9A7;
+  --teal-dark: #00a88c;
+  --teal-light: #00e6be;
+  --teal-bg: rgba(0, 201, 167, 0.08);
+  --teal-bg-strong: rgba(0, 201, 167, 0.15);
+  --orange: #FF6B35;
+  --orange-light: #FF8A5C;
+  --orange-bg: rgba(255, 107, 53, 0.1);
+  --bg: #F5F7FA;
+  --bg-dark: #EEF1F5;
+  --white: #FFFFFF;
+  --gray-50: #F8FAFC;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-300: #CBD5E1;
+  --gray-400: #94A3B8;
+  --gray-500: #64748B;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --text-primary: #1a2332;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+  --font-body: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Cabinet Grotesk', 'General Sans', sans-serif;
+  --transition: 0.2s ease;
+}
+
+html, body {
+  font-family: var(--font-body);
+  background: #E8ECF1;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ========== PHONE FRAME ========== */
+.phone-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #E8ECF1 0%, #D5DBE4 100%);
+}
+
+.phone-frame {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  background: #000;
+  border-radius: 50px;
+  padding: 12px;
+  box-shadow: 
+    0 0 0 2px #333,
+    0 0 0 4px #1a1a1a,
+    0 25px 50px rgba(0,0,0,0.25),
+    inset 0 0 3px rgba(255,255,255,0.05);
+}
+
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 40px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Notch */
+.phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 34px;
+  background: #000;
+  border-radius: 0 0 20px 20px;
+  z-index: 100;
+}
+
+.phone-notch::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 22px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1a1a2e;
+  border: 2px solid #0d0d1a;
+}
+
+/* Status bar */
+.status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 99;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.status-bar-time { font-size: 14px; font-weight: 700; }
+.status-bar-icons { display: flex; gap: 4px; align-items: center; }
+.status-bar-icons svg { width: 16px; height: 16px; }
+
+/* ========== SCREEN CONTAINER ========== */
+.screen-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: translateX(20px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.screen::-webkit-scrollbar { display: none; }
+.screen { scrollbar-width: none; }
+
+/* ========== BOTTOM NAV ========== */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: var(--white);
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 10px;
+  justify-content: space-around;
+  z-index: 50;
+  padding-bottom: 20px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: var(--transition);
+  border: none;
+  background: none;
+  padding: 4px 12px;
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+  color: var(--gray-400);
+  transition: var(--transition);
+}
+
+.nav-item span {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gray-400);
+  transition: var(--transition);
+}
+
+.nav-item.active svg { color: var(--teal); }
+.nav-item.active span { color: var(--teal); font-weight: 600; }
+
+/* ========== SCREEN: SPLASH ========== */
+.splash-screen {
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.splash-logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 24px;
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.splash-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.splash-tagline {
+  font-size: 16px;
+  color: var(--gray-400);
+  margin-bottom: 48px;
+  font-weight: 400;
+}
+
+.value-props {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 48px;
+}
+
+.value-prop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.value-prop-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: var(--radius);
+  background: rgba(0, 201, 167, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.value-prop-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--teal);
+}
+
+.value-prop-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--gray-300);
+}
+
+.value-prop-text strong {
+  color: var(--white);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px 32px;
+  background: var(--teal);
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+/* ========== SCREEN: HOME ========== */
+.home-screen {
+  background: var(--bg);
+  padding: 54px 20px 100px;
+}
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.home-greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal) 0%, #00a88c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--white);
+  font-size: 16px;
+}
+
+.greeting-text h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.greeting-text p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.notification-bell {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.notification-bell svg { width: 20px; height: 20px; color: var(--gray-600); }
+.notification-bell::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 2px solid var(--white);
+}
+
+/* Main salary card */
+.salary-card {
+  background: var(--navy);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.salary-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgba(0, 201, 167, 0.08);
+}
+
+.salary-card::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: -20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(0, 201, 167, 0.05);
+}
+
+.salary-label {
+  font-size: 13px;
+  color: var(--gray-400);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.salary-amount {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 4px;
+  letter-spacing: -1px;
+}
+
+.salary-total {
+  font-size: 13px;
+  color: var(--gray-400);
+  margin-bottom: 16px;
+}
+
+.salary-total strong {
+  color: var(--teal);
+}
+
+.progress-bar-container {
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--radius-full);
+  height: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--teal-light));
+  border-radius: var(--radius-full);
+  transition: width 1s ease;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+/* Quick actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.quick-action {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--gray-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-action:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.quick-action.primary {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.quick-action.primary .qa-label { color: var(--navy); font-weight: 700; }
+.quick-action.primary .qa-icon { background: rgba(255,255,255,0.25); }
+.quick-action.primary .qa-icon svg { color: var(--white); }
+
+.qa-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--teal-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+}
+
+.qa-icon svg { width: 22px; height: 22px; color: var(--teal); }
+
+.qa-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Wellness badge */
+.wellness-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--gray-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.wellness-score {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+}
+
+.wellness-score svg {
+  transform: rotate(-90deg);
+  width: 52px;
+  height: 52px;
+}
+
+.wellness-score-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.wellness-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.wellness-info p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ========== SCREEN: WITHDRAWAL REQUEST ========== */
+.withdrawal-screen {
+  background: var(--bg);
+  padding: 54px 20px 100px;
+}
+
+.screen-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.back-btn svg { width: 18px; height: 18px; color: var(--text-primary); }
+
+.screen-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Amount selector */
+.amount-selector {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  text-align: center;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-100);
+}
+
+.amount-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.amount-display {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 20px;
+  letter-spacing: -1.5px;
+}
+
+.amount-display .currency {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gray-500);
+  vertical-align: top;
+  margin-right: 2px;
+}
+
+/* Slider */
+.slider-container {
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+.amount-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--teal) 0%, var(--teal) var(--slider-pct, 27%), var(--gray-200) var(--slider-pct, 27%), var(--gray-200) 100%);
+  outline: none;
+  cursor: pointer;
+}
+
+.amount-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 4px solid var(--white);
+  box-shadow: 0 2px 8px rgba(0, 201, 167, 0.4);
+  cursor: pointer;
+}
+
+.amount-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 4px solid var(--white);
+  box-shadow: 0 2px 8px rgba(0, 201, 167, 0.4);
+  cursor: pointer;
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* Summary card */
+.summary-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.summary-row:not(:last-child) {
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.summary-row .label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.summary-row .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.summary-row .value.free {
+  color: var(--teal);
+}
+
+.fee-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--teal-bg);
+  color: var(--teal-dark);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 12px 0 0;
+}
+
+.fee-badge svg { width: 16px; height: 16px; }
+
+/* Delivery method */
+.delivery-section {
+  margin-bottom: 16px;
+}
+
+.delivery-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.delivery-options {
+  display: flex;
+  gap: 10px;
+}
+
+.delivery-option {
+  flex: 1;
+  padding: 14px 8px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--white);
+}
+
+.delivery-option.selected {
+  border-color: var(--teal);
+  background: var(--teal-bg);
+}
+
+.delivery-option-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 6px;
+}
+
+.delivery-option-icon {
+  font-size: 24px;
+}
+
+.transfer-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 16px 0 20px;
+}
+
+.transfer-time svg { width: 16px; height: 16px; color: var(--teal); }
+
+/* ========== SCREEN: CONFIRMATION ========== */
+.confirmation-screen {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  min-height: 100%;
+}
+
+.check-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--teal-bg-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.check-circle svg {
+  width: 52px;
+  height: 52px;
+  color: var(--teal);
+}
+
+.checkmark-path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: drawCheck 0.6s ease 0.3s forwards;
+}
+
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+.check-circle-ring {
+  animation: scaleIn 0.4s ease forwards;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.confirm-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.confirm-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.confirm-details {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-100);
+}
+
+.confirm-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.confirm-detail-row:not(:last-child) {
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.confirm-detail-row .label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.confirm-detail-row .value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.txn-id-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--gray-100);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.copy-btn:hover { background: var(--gray-200); }
+.copy-btn svg { width: 14px; height: 14px; color: var(--gray-600); }
+
+.btn-secondary {
+  width: 100%;
+  padding: 16px 32px;
+  background: var(--white);
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ========== SCREEN: HISTORY ========== */
+.history-screen {
+  background: var(--bg);
+  padding: 54px 20px 100px;
+}
+
+.month-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.month-tab {
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: var(--white);
+  color: var(--text-secondary);
+  border: 1px solid var(--gray-200);
+}
+
+.month-tab.active {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
+
+.transaction-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.txn-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: var(--radius);
+  background: var(--teal-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.txn-icon svg { width: 20px; height: 20px; color: var(--teal); }
+
+.txn-info { flex: 1; }
+.txn-info .txn-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.txn-info .txn-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.txn-right { text-align: right; }
+.txn-amount {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.txn-status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.txn-status.completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.txn-status.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #D97706;
+}
+
+.monthly-summary {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-top: 16px;
+  border: 1px solid var(--gray-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.monthly-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.monthly-summary-row .label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.monthly-summary-row .value {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.monthly-summary-row .value.highlight {
+  color: var(--teal);
+}
+
+/* ========== SCREEN: EDUCATION ========== */
+.education-screen {
+  background: var(--bg);
+  padding: 54px 20px 100px;
+}
+
+.xp-bar-container {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.xp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.xp-level {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.xp-level .level-badge {
+  color: var(--orange);
+}
+
+.xp-points {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.xp-progress {
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  height: 8px;
+  overflow: hidden;
+}
+
+.xp-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  border-radius: var(--radius-full);
+  transition: width 1s ease;
+}
+
+.streak-card {
+  background: linear-gradient(135deg, var(--orange), #FF8A5C);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--white);
+}
+
+.streak-fire { font-size: 32px; }
+.streak-info h4 { font-size: 15px; font-weight: 700; }
+.streak-info p { font-size: 12px; opacity: 0.9; }
+
+.module-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.module-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.progress-ring-container {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+}
+
+.progress-ring-container svg {
+  transform: rotate(-90deg);
+  width: 48px;
+  height: 48px;
+}
+
+.progress-ring-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.module-info { flex: 1; }
+.module-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.module-info p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.module-arrow { color: var(--gray-300); }
+.module-arrow svg { width: 18px; height: 18px; }
+
+.daily-challenge {
+  background: var(--teal-bg);
+  border: 1.5px solid rgba(0, 201, 167, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.daily-challenge-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.daily-challenge-header svg { width: 18px; height: 18px; color: var(--teal); }
+.daily-challenge-header span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.daily-challenge p {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.daily-challenge .reward {
+  font-size: 13px;
+  color: var(--teal-dark);
+  font-weight: 600;
+}
+
+/* ========== SCREEN: PROFILE ========== */
+.profile-screen {
+  background: var(--bg);
+  padding: 54px 20px 100px;
+}
+
+.profile-header-card {
+  background: var(--navy);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header-card::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(0, 201, 167, 0.08);
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), #00a88c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0 auto 12px;
+  border: 3px solid rgba(255,255,255,0.15);
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.profile-company {
+  font-size: 13px;
+  color: var(--gray-400);
+}
+
+/* FWI Gauge */
+.fwi-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.fwi-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.fwi-gauge {
+  position: relative;
+  width: 140px;
+  height: 80px;
+  margin: 0 auto 8px;
+  overflow: hidden;
+}
+
+.fwi-gauge svg { width: 140px; height: 80px; }
+
+.fwi-value {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--teal);
+}
+
+.fwi-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* Settings list */
+.settings-list {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  margin-bottom: 20px;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.settings-item:not(:last-child) {
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.settings-item:hover { background: var(--gray-50); }
+
+.settings-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--teal-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-icon svg { width: 18px; height: 18px; color: var(--teal); }
+
+.settings-info { flex: 1; }
+.settings-info .settings-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.settings-info .settings-value {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.settings-arrow svg { width: 16px; height: 16px; color: var(--gray-300); }
+
+.logout-btn {
+  width: 100%;
+  padding: 14px;
+  background: none;
+  border: 1.5px solid var(--danger);
+  border-radius: var(--radius-full);
+  color: var(--danger);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.logout-btn:hover { background: rgba(239, 68, 68, 0.05); }
+
+/* ========== SCREEN: EMPLOYER DASHBOARD ========== */
+.employer-screen {
+  background: var(--bg);
+  padding: 0;
+  overflow-y: auto;
+}
+
+.employer-header {
+  background: var(--navy);
+  padding: 54px 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.employer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.employer-logo svg { width: 28px; height: 28px; }
+.employer-logo-text {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.employer-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--teal);
+  background: rgba(0,201,167,0.1);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.employer-content {
+  padding: 20px;
+  padding-bottom: 100px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.kpi-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.kpi-delta {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.kpi-delta.up { color: var(--success); }
+.kpi-delta.down { color: var(--danger); }
+.kpi-delta.neutral { color: var(--text-muted); }
+
+/* Mini chart */
+.chart-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+}
+
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: var(--teal);
+  transition: height 0.8s ease;
+  min-height: 4px;
+  opacity: 0.7;
+}
+
+.bar.highlight { opacity: 1; }
+.bar.predicted { background: var(--teal); opacity: 0.35; border: 1px dashed var(--teal); background: transparent; }
+
+.bar-label {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Alert card */
+.alert-card {
+  background: var(--orange-bg);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.alert-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 107, 53, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-icon svg { width: 16px; height: 16px; color: var(--orange); }
+.alert-text { font-size: 13px; color: var(--text-primary); line-height: 1.4; }
+.alert-text strong { font-weight: 600; }
+
+/* ========== FOOTER ========== */
+.app-footer {
+  padding: 12px 20px 20px;
+  text-align: center;
+}
+
+.app-footer a {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.app-footer a:hover { color: var(--teal); }
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in { animation: fadeInUp 0.5s ease forwards; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+/* Progress bar animation */
+@keyframes progressFill {
+  from { width: 0; }
+}
+
+.progress-animate {
+  animation: progressFill 1s ease forwards;
+}
+
+/* ========== MOBILE RESPONSIVE ========== */
+@media (max-width: 480px) {
+  .phone-wrapper {
+    padding: 0;
+    background: var(--bg);
+    min-height: 100vh;
+    align-items: flex-start;
+  }
+
+  .phone-frame {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .phone-screen {
+    border-radius: 0;
+    height: 100%;
+  }
+
+  .phone-notch { display: none; }
+  
+  .status-bar {
+    height: 44px;
+    padding: 0 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="phone-wrapper">
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="phone-notch"></div>
+      
+      <!-- Status Bar -->
+      <div class="status-bar" id="statusBar">
+        <span class="status-bar-time">9:41</span>
+        <div class="status-bar-icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 9l3-3 3 3"/><path d="M4 6v3.5a4.5 4.5 0 009 0V6"/><rect x="15" y="4" width="6" height="12" rx="1"/><rect x="16" y="6" width="4" height="8" rx="0.5" fill="currentColor"/></svg>
+        </div>
+      </div>
+      
+      <!-- Screen Container -->
+      <div class="screen-container">
+        
+        <!-- SCREEN 1: SPLASH/ONBOARDING -->
+        <div class="screen splash-screen active" id="screen-splash">
+          <div class="splash-logo check-circle-ring">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Tree trunk -->
+              <rect x="55" y="60" width="10" height="30" rx="3" fill="#00C9A7" opacity="0.6"/>
+              <!-- Leaves / canopy -->
+              <path d="M60 15 L85 50 L75 50 L90 75 L30 75 L45 50 L35 50 Z" fill="#00C9A7"/>
+              <!-- Upward arrow integrated -->
+              <path d="M60 10 L72 28 L65 28 L65 42 L55 42 L55 28 L48 28 Z" fill="#FFFFFF" opacity="0.9"/>
+              <!-- Small circles for growth dots -->
+              <circle cx="42" cy="65" r="3" fill="#00e6be" opacity="0.5"/>
+              <circle cx="78" cy="65" r="3" fill="#00e6be" opacity="0.5"/>
+              <circle cx="60" cy="90" r="2" fill="#00C9A7" opacity="0.3"/>
+            </svg>
+          </div>
+          
+          <h1 class="splash-title">Treevü</h1>
+          <p class="splash-tagline">Tu salario, cuando lo necesites</p>
+          
+          <div class="value-props">
+            <div class="value-prop">
+              <div class="value-prop-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div class="value-prop-text">
+                <strong>Sin intereses</strong>
+                Cero comisiones, cero costos ocultos
+              </div>
+            </div>
+            <div class="value-prop">
+              <div class="value-prop-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              </div>
+              <div class="value-prop-text">
+                <strong>En tu Yape o Plin</strong>
+                Directo a tu billetera favorita
+              </div>
+            </div>
+            <div class="value-prop">
+              <div class="value-prop-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div class="value-prop-text">
+                <strong>100% seguro</strong>
+                Regulado por la BCRP del Perú
+              </div>
+            </div>
+          </div>
+          
+          <button class="btn-primary" onclick="navigateTo('home')">Comenzar</button>
+        </div>
+        
+        <!-- SCREEN 2: HOME DASHBOARD -->
+        <div class="screen home-screen" id="screen-home">
+          <div class="home-header">
+            <div class="home-greeting">
+              <div class="avatar">CM</div>
+              <div class="greeting-text">
+                <h2>Hola, Carlos</h2>
+                <p>Buen día 👋</p>
+              </div>
+            </div>
+            <div class="notification-bell">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            </div>
+          </div>
+          
+          <div class="salary-card">
+            <p class="salary-label">Salario devengado disponible</p>
+            <p class="salary-amount">S/ 1,847.50</p>
+            <p class="salary-total">de <strong>S/ 3,200.00</strong> mensuales</p>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill progress-animate" style="width: 57.7%"></div>
+            </div>
+            <div class="progress-label">
+              <span>18 días trabajados</span>
+              <span>30 días</span>
+            </div>
+          </div>
+          
+          <div class="quick-actions">
+            <div class="quick-action primary" onclick="navigateTo('withdrawal')">
+              <div class="qa-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              </div>
+              <div class="qa-label">Adelantar</div>
+            </div>
+            <div class="quick-action" onclick="navigateTo('history')">
+              <div class="qa-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+              </div>
+              <div class="qa-label">Historial</div>
+            </div>
+            <div class="quick-action" onclick="navigateTo('education')">
+              <div class="qa-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+              </div>
+              <div class="qa-label">Educación</div>
+            </div>
+          </div>
+          
+          <div class="wellness-card">
+            <div class="wellness-score">
+              <svg viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="22" stroke="#E2E8F0" stroke-width="5" fill="none"/>
+                <circle cx="26" cy="26" r="22" stroke="#00C9A7" stroke-width="5" fill="none" stroke-dasharray="138.23" stroke-dashoffset="30.41" stroke-linecap="round"/>
+              </svg>
+              <span class="wellness-score-value">78</span>
+            </div>
+            <div class="wellness-info">
+              <h4>Financial Wellness Score</h4>
+              <p>Tu salud financiera está por encima del promedio. ¡Sigue así!</p>
+            </div>
+          </div>
+          
+          <div class="app-footer">
+            <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+          </div>
+        </div>
+        
+        <!-- SCREEN 3: WITHDRAWAL REQUEST -->
+        <div class="screen withdrawal-screen" id="screen-withdrawal">
+          <div class="screen-header">
+            <button class="back-btn" onclick="navigateTo('home')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <h2 class="screen-title">Solicitar adelanto</h2>
+          </div>
+          
+          <div class="amount-selector">
+            <p class="amount-label">¿Cuánto necesitas?</p>
+            <p class="amount-display"><span class="currency">S/</span> <span id="amountValue">500</span></p>
+            <div class="slider-container">
+              <input type="range" class="amount-slider" id="amountSlider" min="100" max="1847" value="500" step="10">
+            </div>
+            <div class="slider-labels">
+              <span>S/ 100</span>
+              <span>S/ 1,847</span>
+            </div>
+          </div>
+          
+          <div class="summary-card">
+            <div class="summary-row">
+              <span class="label">Monto a recibir</span>
+              <span class="value" id="summaryAmount">S/ 500.00</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">Comisión</span>
+              <span class="value free">S/ 0.00</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">Total</span>
+              <span class="value" id="summaryTotal">S/ 500.00</span>
+            </div>
+            <div class="fee-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Sin intereses, sin comisiones
+            </div>
+          </div>
+          
+          <div class="delivery-section">
+            <p class="delivery-title">Método de entrega</p>
+            <div class="delivery-options">
+              <div class="delivery-option selected" data-method="yape" onclick="selectDelivery(this)">
+                <div class="delivery-option-icon">💜</div>
+                <div class="delivery-option-name">Yape</div>
+              </div>
+              <div class="delivery-option" data-method="plin" onclick="selectDelivery(this)">
+                <div class="delivery-option-icon">💚</div>
+                <div class="delivery-option-name">Plin</div>
+              </div>
+              <div class="delivery-option" data-method="transfer" onclick="selectDelivery(this)">
+                <div class="delivery-option-icon">🏦</div>
+                <div class="delivery-option-name">Transfer.</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="transfer-time">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Llega en ~2 minutos</span>
+          </div>
+          
+          <button class="btn-primary" onclick="navigateTo('confirmation')">Confirmar Adelanto</button>
+        </div>
+        
+        <!-- SCREEN 4: CONFIRMATION -->
+        <div class="screen confirmation-screen" id="screen-confirmation">
+          <div class="check-circle check-circle-ring">
+            <svg viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="30" r="28" stroke="#00C9A7" stroke-width="2.5" opacity="0.3"/>
+              <polyline points="18,32 26,40 42,22" stroke="#00C9A7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="checkmark-path"/>
+            </svg>
+          </div>
+          
+          <h2 class="confirm-title">¡Adelanto enviado!</h2>
+          <p class="confirm-subtitle">Tu dinero está en camino a tu Yape</p>
+          
+          <div class="confirm-details">
+            <div class="confirm-detail-row">
+              <span class="label">Monto</span>
+              <span class="value">S/ 500.00</span>
+            </div>
+            <div class="confirm-detail-row">
+              <span class="label">Destino</span>
+              <span class="value">Yape ****1234</span>
+            </div>
+            <div class="confirm-detail-row">
+              <span class="label">Fecha</span>
+              <span class="value">17 Mar 2026, 21:07</span>
+            </div>
+            <div class="confirm-detail-row">
+              <span class="label">ID Transacción</span>
+              <span class="value">
+                <div class="txn-id-row">
+                  <span>TRV-2026031701</span>
+                  <button class="copy-btn" onclick="copyTxnId()" title="Copiar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                  </button>
+                </div>
+              </span>
+            </div>
+          </div>
+          
+          <button class="btn-secondary" onclick="navigateTo('home')">Volver al inicio</button>
+        </div>
+        
+        <!-- SCREEN 5: HISTORY -->
+        <div class="screen history-screen" id="screen-history">
+          <div class="screen-header">
+            <button class="back-btn" onclick="navigateTo('home')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <h2 class="screen-title">Historial</h2>
+          </div>
+          
+          <div class="month-tabs">
+            <button class="month-tab active">Mar</button>
+            <button class="month-tab">Feb</button>
+            <button class="month-tab">Ene</button>
+          </div>
+          
+          <div class="transaction-card">
+            <div class="txn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </div>
+            <div class="txn-info">
+              <div class="txn-title">Adelanto → Yape</div>
+              <div class="txn-date">17 Mar 2026</div>
+            </div>
+            <div class="txn-right">
+              <div class="txn-amount">S/ 500.00</div>
+              <span class="txn-status completed">Completado</span>
+            </div>
+          </div>
+          
+          <div class="transaction-card">
+            <div class="txn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </div>
+            <div class="txn-info">
+              <div class="txn-title">Adelanto → Plin</div>
+              <div class="txn-date">12 Mar 2026</div>
+            </div>
+            <div class="txn-right">
+              <div class="txn-amount">S/ 400.00</div>
+              <span class="txn-status completed">Completado</span>
+            </div>
+          </div>
+          
+          <div class="transaction-card">
+            <div class="txn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </div>
+            <div class="txn-info">
+              <div class="txn-title">Adelanto → Yape</div>
+              <div class="txn-date">5 Mar 2026</div>
+            </div>
+            <div class="txn-right">
+              <div class="txn-amount">S/ 300.00</div>
+              <span class="txn-status completed">Completado</span>
+            </div>
+          </div>
+          
+          <div class="transaction-card">
+            <div class="txn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </div>
+            <div class="txn-info">
+              <div class="txn-title">Adelanto → Yape</div>
+              <div class="txn-date">Ahora</div>
+            </div>
+            <div class="txn-right">
+              <div class="txn-amount">S/ 200.00</div>
+              <span class="txn-status pending">Pendiente</span>
+            </div>
+          </div>
+          
+          <div class="monthly-summary">
+            <div class="monthly-summary-row">
+              <span class="label">Total adelantado en Marzo</span>
+              <span class="value">S/ 1,200.00</span>
+            </div>
+            <div class="monthly-summary-row">
+              <span class="label">Disponible restante</span>
+              <span class="value highlight">S/ 647.50</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SCREEN 6: FINANCIAL EDUCATION -->
+        <div class="screen education-screen" id="screen-education">
+          <div class="screen-header">
+            <button class="back-btn" onclick="navigateTo('home')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <h2 class="screen-title">Educación Financiera</h2>
+          </div>
+          
+          <div class="xp-bar-container">
+            <div class="xp-header">
+              <span class="xp-level">350 XP — <span class="level-badge">Nivel Plata</span></span>
+              <span class="xp-points">500 XP para Oro</span>
+            </div>
+            <div class="xp-progress">
+              <div class="xp-progress-fill" style="width: 70%"></div>
+            </div>
+          </div>
+          
+          <div class="streak-card">
+            <div class="streak-fire">🔥</div>
+            <div class="streak-info">
+              <h4>5 días seguidos</h4>
+              <p>¡Increíble racha! Sigue aprendiendo</p>
+            </div>
+          </div>
+          
+          <div class="module-card">
+            <div class="progress-ring-container">
+              <svg viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="20" stroke="#E2E8F0" stroke-width="4" fill="none"/>
+                <circle cx="24" cy="24" r="20" stroke="#00C9A7" stroke-width="4" fill="none" stroke-dasharray="125.66" stroke-dashoffset="31.42" stroke-linecap="round"/>
+              </svg>
+              <span class="progress-ring-value">75%</span>
+            </div>
+            <div class="module-info">
+              <h4>Ahorro inteligente</h4>
+              <p>6 de 8 lecciones completadas</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="module-card">
+            <div class="progress-ring-container">
+              <svg viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="20" stroke="#E2E8F0" stroke-width="4" fill="none"/>
+                <circle cx="24" cy="24" r="20" stroke="#FF6B35" stroke-width="4" fill="none" stroke-dasharray="125.66" stroke-dashoffset="75.40" stroke-linecap="round"/>
+              </svg>
+              <span class="progress-ring-value">40%</span>
+            </div>
+            <div class="module-info">
+              <h4>Control de gastos</h4>
+              <p>3 de 8 lecciones completadas</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="module-card">
+            <div class="progress-ring-container">
+              <svg viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="20" stroke="#E2E8F0" stroke-width="4" fill="none"/>
+              </svg>
+              <span class="progress-ring-value">0%</span>
+            </div>
+            <div class="module-info">
+              <h4>Inversión básica</h4>
+              <p>0 de 10 lecciones completadas</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="daily-challenge">
+            <div class="daily-challenge-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>Reto diario</span>
+            </div>
+            <p>Completa el quiz de ahorro y gana 50 XP</p>
+            <span class="reward">+50 XP</span>
+          </div>
+        </div>
+        
+        <!-- SCREEN 7: PROFILE -->
+        <div class="screen profile-screen" id="screen-profile">
+          <div class="profile-header-card">
+            <div class="profile-avatar">CM</div>
+            <h3 class="profile-name">Carlos Mendoza</h3>
+            <p class="profile-company">RetailMax Perú S.A.</p>
+          </div>
+          
+          <div class="fwi-card">
+            <h4 class="fwi-title">Financial Wellness Index</h4>
+            <div class="fwi-gauge">
+              <svg viewBox="0 0 140 80">
+                <path d="M15 75 A55 55 0 0 1 125 75" stroke="#E2E8F0" stroke-width="10" fill="none" stroke-linecap="round"/>
+                <path d="M15 75 A55 55 0 0 1 125 75" stroke="url(#gaugeGrad)" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="172.79" stroke-dashoffset="38.01"/>
+                <defs>
+                  <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#FF6B35"/>
+                    <stop offset="50%" stop-color="#F59E0B"/>
+                    <stop offset="100%" stop-color="#00C9A7"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span class="fwi-value">78</span>
+            </div>
+            <p class="fwi-label">Por encima del promedio</p>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value">3</div>
+              <div class="stat-label">Adelantos este mes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">37%</div>
+              <div class="stat-label">Ratio adelanto / salario</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">5</div>
+              <div class="stat-label">Racha educación (días)</div>
+            </div>
+          </div>
+          
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              </div>
+              <div class="settings-info">
+                <div class="settings-label">Wallet preferida</div>
+                <div class="settings-value">Yape ****1234</div>
+              </div>
+              <div class="settings-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              </div>
+              <div class="settings-info">
+                <div class="settings-label">Notificaciones</div>
+                <div class="settings-value">Activadas</div>
+              </div>
+              <div class="settings-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+              </div>
+              <div class="settings-info">
+                <div class="settings-label">Idioma</div>
+                <div class="settings-value">Español</div>
+              </div>
+              <div class="settings-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+          
+          <button class="logout-btn">Cerrar sesión</button>
+        </div>
+        
+        <!-- SCREEN 8: EMPLOYER DASHBOARD -->
+        <div class="screen employer-screen" id="screen-employer">
+          <div class="employer-header">
+            <div class="employer-logo">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="14" width="5" height="11" rx="1.5" fill="#00C9A7" opacity="0.6"/>
+                <path d="M14 4 L20 11 L18 11 L22 16 L6 16 L10 11 L8 11 Z" fill="#00C9A7"/>
+                <path d="M14 2 L17 7 L15 7 L15 10 L13 10 L13 7 L11 7 Z" fill="#FFFFFF" opacity="0.9"/>
+              </svg>
+              <span class="employer-logo-text">Treevü</span>
+            </div>
+            <span class="employer-badge">Portal Empresarial</span>
+          </div>
+          
+          <div class="employer-content">
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="kpi-label">Empleados activos</div>
+                <div class="kpi-value">847</div>
+                <div class="kpi-delta up">↑ +12 este mes</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Demanda predicha (7d)</div>
+                <div class="kpi-value">S/ 245K</div>
+                <div class="kpi-delta up">↑ +8% vs semana ant.</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Riesgo de rotación</div>
+                <div class="kpi-value" style="color: var(--orange);">12%</div>
+                <div class="kpi-delta down">↑ +2.1pp</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Engagement Score</div>
+                <div class="kpi-value">78</div>
+                <div class="kpi-delta neutral">= Sin cambios</div>
+              </div>
+            </div>
+            
+            <div class="chart-card">
+              <div class="chart-title">Demanda de adelantos — Próximos 7 días (predicción ML)</div>
+              <div class="bar-chart">
+                <div class="bar-col">
+                  <div class="bar highlight" style="height: 60px;"></div>
+                  <span class="bar-label">Lun</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar highlight" style="height: 45px;"></div>
+                  <span class="bar-label">Mar</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar highlight" style="height: 72px;"></div>
+                  <span class="bar-label">Mié</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar predicted" style="height: 85px;"></div>
+                  <span class="bar-label">Jue</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar predicted" style="height: 92px;"></div>
+                  <span class="bar-label">Vie</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar predicted" style="height: 38px;"></div>
+                  <span class="bar-label">Sáb</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar predicted" style="height: 25px;"></div>
+                  <span class="bar-label">Dom</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="alert-card">
+              <div class="alert-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="alert-text">
+                <strong>Alerta de rotación:</strong> 3 empleados con alto riesgo de fuga en el área de Almacén. Se recomienda revisión con RRHH.
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div><!-- end screen-container -->
+      
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav" id="bottomNav" style="display: none;">
+        <button class="nav-item active" data-screen="home" onclick="navTo('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Inicio</span>
+        </button>
+        <button class="nav-item" data-screen="withdrawal" onclick="navTo('withdrawal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          <span>Adelantos</span>
+        </button>
+        <button class="nav-item" data-screen="education" onclick="navTo('education')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          <span>Educación</span>
+        </button>
+        <button class="nav-item" data-screen="profile" onclick="navTo('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Perfil</span>
+        </button>
+      </div>
+      
+    </div><!-- end phone-screen -->
+  </div><!-- end phone-frame -->
+</div>
+
+<script>
+// ========== NAVIGATION ==========
+let currentScreen = 'splash';
+const screensWithNav = ['home', 'withdrawal', 'history', 'education', 'profile', 'employer'];
+const screensWithoutNav = ['splash', 'confirmation'];
+
+function navigateTo(screenId) {
+  // Hide current screen
+  const current = document.getElementById('screen-' + currentScreen);
+  if (current) {
+    current.classList.remove('active');
+  }
+  
+  // Show new screen
+  const target = document.getElementById('screen-' + screenId);
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+  }
+  
+  // Update bottom nav visibility
+  const bottomNav = document.getElementById('bottomNav');
+  if (screensWithoutNav.includes(screenId)) {
+    bottomNav.style.display = 'none';
+  } else {
+    bottomNav.style.display = 'flex';
+  }
+  
+  // Update status bar color
+  const statusBar = document.getElementById('statusBar');
+  if (screenId === 'splash') {
+    statusBar.style.color = '#FFFFFF';
+  } else if (screenId === 'employer') {
+    statusBar.style.color = '#FFFFFF';
+  } else {
+    statusBar.style.color = '#1a2332';
+  }
+  
+  // Update active nav item
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+    if (item.dataset.screen === screenId) {
+      item.classList.add('active');
+    }
+  });
+  
+  // Special: map history to no active nav highlight (it's a sub-screen)
+  // Special: map confirmation to no active nav highlight
+  
+  currentScreen = screenId;
+  
+  // Re-animate progress bars
+  if (screenId === 'home') {
+    animateProgressBars();
+  }
+  
+  // Re-trigger confirmation animation
+  if (screenId === 'confirmation') {
+    const checkPath = target.querySelector('.checkmark-path');
+    if (checkPath) {
+      checkPath.style.animation = 'none';
+      checkPath.offsetHeight; // force reflow
+      checkPath.style.animation = 'drawCheck 0.6s ease 0.3s forwards';
+    }
+  }
+}
+
+function navTo(screenId) {
+  navigateTo(screenId);
+}
+
+// ========== AMOUNT SLIDER ==========
+const slider = document.getElementById('amountSlider');
+const amountValue = document.getElementById('amountValue');
+const summaryAmount = document.getElementById('summaryAmount');
+const summaryTotal = document.getElementById('summaryTotal');
+
+if (slider) {
+  function updateSlider() {
+    const val = parseInt(slider.value);
+    const pct = ((val - 100) / (1847 - 100)) * 100;
+    slider.style.setProperty('--slider-pct', pct + '%');
+    
+    amountValue.textContent = val.toLocaleString('es-PE');
+    const formatted = 'S/ ' + val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    summaryAmount.textContent = formatted;
+    summaryTotal.textContent = formatted;
+  }
+  
+  slider.addEventListener('input', updateSlider);
+  updateSlider();
+}
+
+// ========== DELIVERY METHOD ==========
+function selectDelivery(el) {
+  document.querySelectorAll('.delivery-option').forEach(opt => opt.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ========== COPY TXN ID ==========
+function copyTxnId() {
+  navigator.clipboard.writeText('TRV-2026031701').catch(() => {});
+  const btn = event.currentTarget;
+  btn.style.background = 'var(--teal-bg)';
+  setTimeout(() => { btn.style.background = ''; }, 1000);
+}
+
+// ========== PROGRESS BAR ANIMATION ==========
+function animateProgressBars() {
+  const bars = document.querySelectorAll('.progress-animate');
+  bars.forEach(bar => {
+    const width = bar.style.width;
+    bar.style.width = '0';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        bar.style.width = width;
+      });
+    });
+  });
+}
+
+// ========== MONTH TABS ==========
+document.querySelectorAll('.month-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.month-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ========== EMPLOYER TAB (hidden nav item for testing) ==========
+// Long-press on profile avatar to access employer dashboard
+const profileAvatar = document.querySelector('.profile-header-card');
+if (profileAvatar) {
+  let pressTimer;
+  profileAvatar.addEventListener('mousedown', () => {
+    pressTimer = setTimeout(() => navigateTo('employer'), 800);
+  });
+  profileAvatar.addEventListener('mouseup', () => clearTimeout(pressTimer));
+  profileAvatar.addEventListener('touchstart', () => {
+    pressTimer = setTimeout(() => navigateTo('employer'), 800);
+  });
+  profileAvatar.addEventListener('touchend', () => clearTimeout(pressTimer));
+}
+
+// Also add a subtle link on the employer screen to go back
+document.querySelector('.employer-header')?.addEventListener('click', (e) => {
+  if (e.target.closest('.employer-badge')) {
+    navigateTo('profile');
+  }
+});
+
+// ========== INITIAL STATE ==========
+// Status bar starts white on splash
+document.getElementById('statusBar').style.color = '#FFFFFF';
+</script>
+</body>
+</html>
