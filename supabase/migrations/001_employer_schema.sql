@@ -235,6 +235,11 @@ CREATE POLICY "employer sees own company"
   ON companies FOR SELECT
   USING (id = auth_employer_company_id());
 
+-- EMPLOYER_USERS: user can always see their own row (needed for first login)
+CREATE POLICY "employer sees own row"
+  ON employer_users FOR SELECT
+  USING (auth_user_id = auth.uid());
+
 -- EMPLOYER_USERS: see colleagues in same company
 CREATE POLICY "employer sees own company users"
   ON employer_users FOR SELECT
