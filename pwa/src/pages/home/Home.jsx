@@ -5,6 +5,7 @@ import PulseBar from '@/components/ui/PulseBar'
 import Button from '@/components/ui/Button'
 import Skeleton from '@/components/ui/Skeleton'
 import { useEWAStore } from '@/store/useEWAStore'
+import { haptics } from '@/utils/haptic'
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', minimumFractionDigits: 0 }).format(amount)
@@ -310,17 +311,19 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => navigate('/notifications')}
+                onClick={() => { haptics.tap(); navigate('/notifications') }}
+                aria-label="Ver notificaciones"
                 className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center relative active:bg-white/25 transition-colors"
               >
-                <span className="material-symbols-outlined text-white text-xl">notifications</span>
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--color-secondary-fixed)] rounded-full" />
+                <span className="material-symbols-outlined text-white text-xl" aria-hidden="true">notifications</span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--color-secondary-fixed)] rounded-full" aria-hidden="true" />
               </button>
               <button
-                onClick={() => navigate('/settings')}
+                onClick={() => { haptics.tap(); navigate('/settings') }}
+                aria-label="Ir a mi perfil"
                 className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center active:bg-white/25 transition-colors"
               >
-                <span className="material-symbols-outlined text-white text-xl">person</span>
+                <span className="material-symbols-outlined text-white text-xl" aria-hidden="true">person</span>
               </button>
             </div>
           </div>

@@ -1,3 +1,5 @@
+import { haptics } from '@/utils/haptic'
+
 const variants = {
   primary:
     'editorial-gradient text-white font-semibold shadow-ambient active:opacity-90',
@@ -12,9 +14,9 @@ const variants = {
 }
 
 const sizes = {
-  sm: 'h-10 px-4 text-sm rounded-[var(--radius-lg)]',
-  md: 'h-12 px-6 text-sm rounded-[var(--radius-xl)]',
-  lg: 'h-14 px-8 text-base rounded-[var(--radius-xl)]',
+  sm:   'h-10 px-4 text-sm rounded-[var(--radius-lg)]',
+  md:   'h-12 px-6 text-sm rounded-[var(--radius-xl)]',
+  lg:   'h-14 px-8 text-base rounded-[var(--radius-xl)]',
   full: 'h-14 w-full text-base rounded-[var(--radius-xl)]',
 }
 
@@ -26,11 +28,18 @@ export default function Button({
   disabled = false,
   icon,
   className = '',
+  onClick,
   ...props
 }) {
+  const handleClick = (e) => {
+    haptics.medium()
+    onClick?.(e)
+  }
+
   return (
     <button
       disabled={disabled || loading}
+      onClick={handleClick}
       className={`
         inline-flex items-center justify-center gap-2
         transition-all duration-150 cursor-pointer
@@ -40,10 +49,10 @@ export default function Button({
       {...props}
     >
       {loading ? (
-        <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" aria-label="Cargando" />
       ) : (
         <>
-          {icon && <span className="material-symbols-outlined text-xl">{icon}</span>}
+          {icon && <span className="material-symbols-outlined text-xl" aria-hidden="true">{icon}</span>}
           {children}
         </>
       )}

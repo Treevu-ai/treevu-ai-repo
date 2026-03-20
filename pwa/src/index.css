@@ -64,6 +64,49 @@
   --radius-full: 9999px;
 }
 
+/* ── Dark mode overrides ── */
+html.dark {
+  --color-surface:                    #111318;
+  --color-surface-dim:                #111318;
+  --color-surface-bright:             #37393e;
+  --color-surface-container-lowest:   #0c0e13;
+  --color-surface-container-low:      #191c21;
+  --color-surface-container:          #1d2026;
+  --color-surface-container-high:     #272a30;
+  --color-surface-container-highest:  #323540;
+  --color-surface-variant:            #44444f;
+
+  --color-on-surface:         #e2e2e9;
+  --color-on-surface-variant: #c5c4d4;
+  --color-inverse-surface:    #e2e2e9;
+  --color-inverse-on-surface: #2f3132;
+
+  --color-outline:         #8f8e9e;
+  --color-outline-variant: #44434e;
+
+  --color-background:    #111318;
+  --color-on-background: #e2e2e9;
+
+  --color-primary:           #bdc2ff;
+  --color-primary-container: #2c3499;
+  --color-primary-fixed:     #1a237e;
+  --color-on-primary-fixed:  #bdc2ff;
+  --color-surface-tint:      #bdc2ff;
+
+  --color-secondary:               #78dc77;
+  --color-secondary-container:     #00390f;
+  --color-on-secondary-container:  #78dc77;
+  --color-secondary-fixed:         #94f990;
+  --color-secondary-fixed-dim:     #78dc77;
+
+  --color-tertiary-container:     #002d35;
+  --color-on-tertiary-container:  #4fd8eb;
+
+  --color-error:            #ffb4ab;
+  --color-error-container:  #93000a;
+  --color-on-error-container: #ffdad6;
+}
+
 @layer base {
   * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
@@ -81,6 +124,13 @@
   }
 
   ::-webkit-scrollbar { width: 0; background: transparent; }
+
+  /* Visible focus ring for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 }
 
 @layer components {
@@ -92,6 +142,18 @@
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+  }
+
+  html.dark .glass-panel {
+    background: rgba(17, 19, 24, 0.88);
+  }
+
+  html.dark .pulse-glow {
+    box-shadow: 0 0 28px rgba(120, 220, 119, 0.45);
+  }
+
+  html.dark .shadow-ambient {
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.28);
   }
 
   .pulse-glow {
@@ -156,6 +218,15 @@
   }
   .animate-ring-out {
     animation: ring-out 1.8s ease-out infinite;
+  }
+
+  /* ── Page route transition ── */
+  @keyframes page-in {
+    from { opacity: 0; transform: translateX(12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .animate-page-in {
+    animation: page-in 0.18s ease-out both;
   }
 
   /* ── Stagger fade-up ── */

@@ -12,12 +12,18 @@ export default function ToastContainer() {
   const dismiss = useToastStore((s) => s.dismiss)
 
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-full max-w-[390px] px-4 space-y-2 pointer-events-none">
+    <div
+      role="region"
+      aria-label="Notificaciones"
+      aria-live="polite"
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-full max-w-[390px] px-4 space-y-2 pointer-events-none"
+    >
       {toasts.map((toast) => {
         const style = TYPE_STYLES[toast.type] || TYPE_STYLES.info
         return (
           <div
             key={toast.id}
+            role="alert"
             onClick={() => dismiss(toast.id)}
             className={`
               pointer-events-auto flex items-center gap-3 px-4 py-3.5
@@ -29,11 +35,12 @@ export default function ToastContainer() {
             <span
               className="material-symbols-outlined text-xl shrink-0"
               style={{ fontVariationSettings: '"FILL" 1' }}
+              aria-hidden="true"
             >
               {style.icon}
             </span>
             <span className="flex-1 leading-snug">{toast.message}</span>
-            <span className="material-symbols-outlined text-base opacity-70">close</span>
+            <span className="material-symbols-outlined text-base opacity-70" aria-hidden="true">close</span>
           </div>
         )
       })}

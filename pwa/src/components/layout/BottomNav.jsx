@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { haptics } from '@/utils/haptic'
 
 const NAV_ITEMS = [
   { to: '/home',      icon: 'home',          label: 'Inicio' },
@@ -10,13 +11,18 @@ const NAV_ITEMS = [
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50">
+    <nav
+      aria-label="Navegación principal"
+      className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50"
+    >
       <div className="glass-panel border-t border-[var(--color-outline-variant)]/30 px-2 pb-safe-area-inset-bottom">
         <div className="flex items-center justify-around h-16">
           {NAV_ITEMS.map(({ to, icon, label }) => (
             <NavLink
               key={to}
               to={to}
+              onClick={() => haptics.tap()}
+              aria-label={label}
               className={({ isActive }) =>
                 `flex flex-col items-center gap-0.5 px-3 py-1.5 min-w-[56px] transition-all duration-200
                 ${isActive ? 'text-[var(--color-primary)]' : 'text-[var(--color-outline)]'}`
@@ -38,6 +44,7 @@ export default function BottomNav() {
                           ? '"FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24'
                           : '"FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24',
                       }}
+                      aria-hidden="true"
                     >
                       {icon}
                     </span>

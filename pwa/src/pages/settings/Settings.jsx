@@ -3,10 +3,18 @@ import Card from '@/components/ui/Card'
 import PageHeader from '@/components/layout/PageHeader'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useEWAStore } from '@/store/useEWAStore'
+import { useThemeStore } from '@/store/useThemeStore'
+import { haptics } from '@/utils/haptic'
 
 function formatCurrency(n) {
   return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', minimumFractionDigits: 0 }).format(n)
 }
+
+const THEME_OPTIONS = [
+  { value: 'light',  icon: 'light_mode',  label: 'Claro' },
+  { value: 'dark',   icon: 'dark_mode',   label: 'Oscuro' },
+  { value: 'system', icon: 'brightness_auto', label: 'Sistema' },
+]
 
 const MENU_SECTIONS = [
   {
@@ -36,7 +44,9 @@ const MENU_SECTIONS = [
 export default function Settings() {
   const navigate = useNavigate()
   const employee = useEWAStore((s) => s.employee)
-  const logout = useAuthStore((s) => s.logout)
+  const logout   = useAuthStore((s) => s.logout)
+  const theme    = useThemeStore((s) => s.theme)
+  const setTheme = useThemeStore((s) => s.setTheme)
 
   return (
     <div className="app-container bg-[var(--color-surface)] min-h-dvh">
@@ -46,8 +56,11 @@ export default function Settings() {
         {/* Profile card */}
         <Card className="p-5">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl editorial-gradient flex items-center justify-center text-white text-2xl font-bold"
-              style={{ fontFamily: 'var(--font-headline)' }}>
+            <div
+              className="w-16 h-16 rounded-2xl editorial-gradient flex items-center justify-center text-white text-2xl font-bold"
+              style={{ fontFamily: 'var(--font-headline)' }}
+              aria-hidden="true"
+            >
               {employee.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
             </div>
             <div>
@@ -57,7 +70,7 @@ export default function Settings() {
               </h2>
               <p className="text-sm text-[var(--color-on-surface-variant)]">{employee.company}</p>
               <div className="flex items-center gap-1.5 mt-1.5">
-                <span className="w-2 h-2 rounded-full bg-[var(--color-secondary)]" />
+                <span className="w-2 h-2 rounded-full bg-[var(--color-secondary)]" aria-hidden="true" />
                 <span className="text-xs text-[var(--color-secondary)] font-medium">Activo</span>
               </div>
             </div>
@@ -82,6 +95,44 @@ export default function Settings() {
           </Card>
         </div>
 
+        {/* Theme selector */}
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-on-surface-variant)] px-1">
+            Apariencia
+          </p>
+          <Card className="p-4">
+            <div className="flex gap-2" role="group" aria-label="Tema de la aplicación">
+              {THEME_OPTIONS.map(({ value, icon, label }) => {
+                const active = theme === value
+                return (
+                  <button
+                    key={value}
+                    onClick={() => { haptics.light(); setTheme(value) }}
+                    aria-pressed={active}
+                    className={`
+                      flex-1 flex flex-col items-center gap-1.5 py-3 rounded-[var(--radius-lg)]
+                      transition-all duration-200 text-xs font-medium
+                      ${active
+                        ? 'bg-[var(--color-primary-fixed)] text-[var(--color-primary)]'
+                        : 'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface-variant)] active:opacity-70'
+                      }
+                    `}
+                  >
+                    <span
+                      className="material-symbols-outlined text-xl"
+                      style={{ fontVariationSettings: active ? '"FILL" 1' : '"FILL" 0' }}
+                      aria-hidden="true"
+                    >
+                      {icon}
+                    </span>
+                    {label}
+                  </button>
+                )
+              })}
+            </div>
+          </Card>
+        </div>
+
         {/* Menu */}
         {MENU_SECTIONS.map((section) => (
           <div key={section.title} className="space-y-2">
@@ -96,14 +147,14 @@ export default function Settings() {
                   className="w-full flex items-center gap-3 p-4 active:bg-[var(--color-surface-container-low)] transition-colors"
                 >
                   <div className="w-9 h-9 rounded-xl bg-[var(--color-surface-container-low)] flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[var(--color-on-surface-variant)] text-lg">
+                    <span className="material-symbols-outlined text-[var(--color-on-surface-variant)] text-lg" aria-hidden="true">
                       {icon}
                     </span>
                   </div>
                   <span className="flex-1 text-left text-sm font-medium text-[var(--color-on-surface)]">
                     {label}
                   </span>
-                  <span className="material-symbols-outlined text-[var(--color-outline)] text-xl">
+                  <span className="material-symbols-outlined text-[var(--color-outline)] text-xl" aria-hidden="true">
                     chevron_right
                   </span>
                 </button>
@@ -114,10 +165,10 @@ export default function Settings() {
 
         {/* Logout */}
         <button
-          onClick={() => { logout(); navigate('/login', { replace: true }) }}
+          onClick={() => { haptics.medium(); logout(); navigate('/login', { replace: true }) }}
           className="w-full flex items-center justify-center gap-2 p-4 text-[var(--color-error)] font-medium text-sm"
         >
-          <span className="material-symbols-outlined text-xl">logout</span>
+          <span className="material-symbols-outlined text-xl" aria-hidden="true">logout</span>
           Cerrar sesión
         </button>
       </div>
