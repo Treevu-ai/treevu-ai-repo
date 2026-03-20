@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import PageHeader from '@/components/layout/PageHeader'
+import Skeleton from '@/components/ui/Skeleton'
 import { useEWAStore } from '@/store/useEWAStore'
 
 function formatCurrency(n) {
@@ -11,15 +12,58 @@ function formatCurrency(n) {
 
 const QUICK_AMOUNTS = [100, 200, 300, 500]
 
+function AdvanceSkeleton() {
+  return (
+    <div className="app-container bg-[var(--color-surface)] min-h-dvh">
+      <PageHeader title="Solicitar adelanto" subtitle="Accede a tu sueldo devengado" />
+      <div className="px-4 pb-safe space-y-4">
+        <Card className="p-5 space-y-2">
+          <Skeleton className="h-3 w-24 rounded-full" />
+          <Skeleton className="h-10 w-44 rounded-full" />
+          <Skeleton className="h-3 w-48 rounded-full" />
+        </Card>
+
+        <Card className="p-5 space-y-4">
+          <Skeleton className="h-4 w-36 rounded-full" />
+          <Skeleton className="h-16 w-full rounded-[var(--radius-xl)]" />
+          <div className="flex gap-2">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="flex-1 h-9 rounded-full" />
+            ))}
+          </div>
+        </Card>
+
+        <Card className="p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-4 w-32 rounded-full" />
+            <Skeleton className="h-3 w-16 rounded-full" />
+          </div>
+          <Skeleton className="h-14 w-full rounded-[var(--radius-xl)]" />
+        </Card>
+
+        <Skeleton className="h-12 w-full rounded-[var(--radius-xl)]" />
+      </div>
+    </div>
+  )
+}
+
 export default function AdvanceRequest() {
   const navigate = useNavigate()
   const employee = useEWAStore((s) => s.employee)
   const setRequestedAmount = useEWAStore((s) => s.setRequestedAmount)
   const setSelectedWallet = useEWAStore((s) => s.setSelectedWallet)
+  const [loading, setLoading] = useState(true)
 
   const [amount, setAmount] = useState('')
   const [selectedW, setSelectedW] = useState(employee.wallets[0] || null)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 800)
+    return () => clearTimeout(t)
+  }, [])
+
+  if (loading) return <AdvanceSkeleton />
 
   const numAmount = parseFloat(amount) || 0
   const isValid = numAmount >= 50 && numAmount <= employee.availableAdvance

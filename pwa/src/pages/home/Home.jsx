@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Card from '@/components/ui/Card'
 import PulseBar from '@/components/ui/PulseBar'
 import Button from '@/components/ui/Button'
+import Skeleton from '@/components/ui/Skeleton'
 import { useEWAStore } from '@/store/useEWAStore'
 import { useAuthStore } from '@/store/useAuthStore'
 
@@ -13,11 +15,88 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('es-PE', { day: 'numeric', month: 'long' })
 }
 
+function HomeSkeleton() {
+  return (
+    <div className="app-container bg-[var(--color-surface)] min-h-dvh">
+      {/* Header skeleton */}
+      <div className="editorial-gradient px-6 pt-14 pb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="space-y-2">
+            <Skeleton className="h-3 w-20 rounded-full bg-white/20" />
+            <Skeleton className="h-6 w-32 rounded-full bg-white/20" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="w-10 h-10 rounded-full bg-white/20" />
+            <Skeleton className="w-10 h-10 rounded-full bg-white/20" />
+          </div>
+        </div>
+        <Skeleton className="h-4 w-28 rounded-full bg-white/20 mb-2" />
+        <Skeleton className="h-12 w-48 rounded-full bg-white/20 mb-3" />
+        <Skeleton className="h-2 w-full rounded-full bg-white/20" />
+      </div>
+
+      {/* Content skeleton */}
+      <div className="px-4 py-4 space-y-4">
+        <Card className="p-5 space-y-4">
+          <div className="flex items-start justify-between">
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-24 rounded-full" />
+              <Skeleton className="h-9 w-36 rounded-full" />
+              <Skeleton className="h-3 w-28 rounded-full" />
+            </div>
+            <Skeleton className="w-12 h-12 rounded-2xl" />
+          </div>
+          <Skeleton className="h-12 w-full rounded-[var(--radius-xl)]" />
+        </Card>
+
+        <div className="grid grid-cols-2 gap-3">
+          <Card className="p-4 space-y-3">
+            <Skeleton className="w-9 h-9 rounded-xl" />
+            <Skeleton className="h-3 w-24 rounded-full" />
+            <Skeleton className="h-7 w-10 rounded-full" />
+          </Card>
+          <Card className="p-4 space-y-3">
+            <Skeleton className="w-9 h-9 rounded-xl" />
+            <Skeleton className="h-3 w-24 rounded-full" />
+            <Skeleton className="h-4 w-20 rounded-full" />
+          </Card>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between px-1 mb-3">
+            <Skeleton className="h-4 w-36 rounded-full" />
+            <Skeleton className="h-3 w-16 rounded-full" />
+          </div>
+          <Card className="divide-y divide-[var(--color-surface-container-low)]">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center gap-3 p-4">
+                <Skeleton className="w-10 h-10 rounded-xl shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3.5 w-32 rounded-full" />
+                  <Skeleton className="h-3 w-24 rounded-full" />
+                </div>
+                <Skeleton className="h-4 w-16 rounded-full shrink-0" />
+              </div>
+            ))}
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Home() {
   const navigate = useNavigate()
   const employee = useEWAStore((s) => s.employee)
   const transactions = useEWAStore((s) => s.transactions)
-  const user = useAuthStore((s) => s.user)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 900)
+    return () => clearTimeout(t)
+  }, [])
+
+  if (loading) return <HomeSkeleton />
 
   const progress = (employee.daysWorked / employee.totalDays) * 100
   const recentTx = transactions.slice(0, 3)

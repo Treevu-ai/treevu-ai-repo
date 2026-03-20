@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import { useEWAStore } from '@/store/useEWAStore'
+import { useToastStore } from '@/store/useToastStore'
 
 function formatCurrency(n) {
   return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', minimumFractionDigits: 0 }).format(n)
@@ -11,6 +12,7 @@ function formatCurrency(n) {
 export default function AdvanceSuccess() {
   const navigate = useNavigate()
   const pendingTransfer = useEWAStore((s) => s.pendingTransfer)
+  const showToast = useToastStore((s) => s.show)
   const circleRef = useRef(null)
 
   useEffect(() => {
@@ -24,6 +26,11 @@ export default function AdvanceSuccess() {
       el.style.transform = 'scale(1)'
       el.style.opacity = '1'
     }, 100)
+
+    // Toast notification
+    setTimeout(() => {
+      showToast({ message: '¡Adelanto enviado exitosamente!', type: 'success', duration: 4000 })
+    }, 600)
   }, [])
 
   return (

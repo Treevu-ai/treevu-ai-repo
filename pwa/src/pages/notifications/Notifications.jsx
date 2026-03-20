@@ -34,6 +34,30 @@ const MOCK_NOTIFICATIONS = [
   },
 ]
 
+function EmptyNotifications() {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
+      <div className="w-20 h-20 rounded-full bg-[var(--color-surface-container)] flex items-center justify-center mb-4">
+        <span
+          className="material-symbols-outlined text-4xl text-[var(--color-outline)]"
+          style={{ fontVariationSettings: '"FILL" 0, "wght" 200' }}
+        >
+          notifications_off
+        </span>
+      </div>
+      <h3
+        className="font-semibold text-[var(--color-on-surface)] text-base mb-1"
+        style={{ fontFamily: 'var(--font-headline)' }}
+      >
+        Todo al día
+      </h3>
+      <p className="text-sm text-[var(--color-on-surface-variant)] leading-relaxed">
+        No tienes notificaciones nuevas. Te avisaremos cuando haya novedades.
+      </p>
+    </div>
+  )
+}
+
 export default function Notifications() {
   return (
     <div className="app-container bg-[var(--color-surface)] min-h-dvh">
@@ -41,14 +65,11 @@ export default function Notifications() {
 
       <div className="px-4 pb-safe">
         {MOCK_NOTIFICATIONS.length === 0 ? (
-          <div className="text-center py-16 text-[var(--color-on-surface-variant)]">
-            <span className="material-symbols-outlined text-5xl mb-3 block opacity-30">notifications_off</span>
-            <p className="text-sm">Sin notificaciones</p>
-          </div>
+          <EmptyNotifications />
         ) : (
           <Card className="divide-y divide-[var(--color-surface-container-low)]">
             {MOCK_NOTIFICATIONS.map((n) => (
-              <div key={n.id} className={`flex items-start gap-3 p-4 ${!n.read ? 'bg-[var(--color-primary-fixed)]/30' : ''}`}>
+              <div key={n.id} className={`flex items-start gap-3 p-4 transition-colors active:bg-[var(--color-surface-container-low)] ${!n.read ? 'bg-[var(--color-primary-fixed)]/30' : ''}`}>
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${n.iconBg}`}>
                   <span className={`material-symbols-outlined text-lg ${n.iconColor}`}
                     style={{ fontVariationSettings: '"FILL" 1' }}>

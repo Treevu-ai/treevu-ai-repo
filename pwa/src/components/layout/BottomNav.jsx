@@ -18,28 +18,35 @@ export default function BottomNav() {
               key={to}
               to={to}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-[var(--radius-lg)] transition-all duration-200 min-w-[56px]
-                ${isActive
-                  ? 'text-[var(--color-primary)]'
-                  : 'text-[var(--color-outline)]'
-                }`
+                `flex flex-col items-center gap-0.5 px-3 py-1.5 min-w-[56px] transition-all duration-200
+                ${isActive ? 'text-[var(--color-primary)]' : 'text-[var(--color-outline)]'}`
               }
             >
               {({ isActive }) => (
                 <>
-                  <span
-                    className={`material-symbols-outlined text-2xl transition-all duration-200 ${
-                      isActive ? 'font-[600]' : 'font-[300]'
-                    }`}
-                    style={{
-                      fontVariationSettings: isActive
-                        ? '"FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24'
-                        : '"FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24',
-                    }}
+                  <div
+                    className={`
+                      relative flex items-center justify-center w-14 h-7 rounded-full
+                      transition-all duration-300 ease-out
+                      ${isActive ? 'bg-[var(--color-primary-fixed)]' : 'bg-transparent'}
+                    `}
                   >
-                    {icon}
-                  </span>
-                  <span className={`text-[10px] font-medium leading-none ${isActive ? 'text-[var(--color-primary)]' : ''}`}>
+                    <span
+                      className={`material-symbols-outlined text-2xl transition-all duration-300 ${isActive ? 'scale-110' : 'scale-100'}`}
+                      style={{
+                        fontVariationSettings: isActive
+                          ? '"FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24'
+                          : '"FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24',
+                      }}
+                    >
+                      {icon}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[10px] leading-none transition-all duration-200 ${
+                      isActive ? 'font-semibold text-[var(--color-primary)]' : 'font-medium'
+                    }`}
+                  >
                     {label}
                   </span>
                 </>

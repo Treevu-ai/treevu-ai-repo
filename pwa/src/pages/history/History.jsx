@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Card from '@/components/ui/Card'
 import PulseBar from '@/components/ui/PulseBar'
 import PageHeader from '@/components/layout/PageHeader'
+import Skeleton from '@/components/ui/Skeleton'
 import { useEWAStore } from '@/store/useEWAStore'
 
 function formatCurrency(n) {
@@ -18,11 +20,85 @@ const statusMap = {
   pending: { label: 'Pendiente', color: 'text-[var(--color-outline)]', bg: 'bg-[var(--color-surface-container-high)]' },
 }
 
+function HistorySkeleton() {
+  return (
+    <div className="app-container bg-[var(--color-surface)] min-h-dvh">
+      <PageHeader title="Historial y Bienestar" back={false} />
+      <div className="px-4 pb-safe space-y-4">
+        <Card className="p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-24 rounded-full" />
+              <Skeleton className="h-7 w-28 rounded-full" />
+            </div>
+            <div className="space-y-2 items-end flex flex-col">
+              <Skeleton className="h-3 w-28 rounded-full" />
+              <Skeleton className="h-5 w-20 rounded-full" />
+            </div>
+          </div>
+          <Skeleton className="h-2 w-full rounded-full" />
+        </Card>
+
+        <div>
+          <Skeleton className="h-4 w-36 rounded-full px-1 mb-3" />
+          <Card className="divide-y divide-[var(--color-surface-container-low)]">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center gap-3 p-4">
+                <Skeleton className="w-10 h-10 rounded-xl shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3.5 w-32 rounded-full" />
+                  <Skeleton className="h-3 w-20 rounded-full" />
+                </div>
+                <div className="space-y-2 items-end flex flex-col">
+                  <Skeleton className="h-3.5 w-16 rounded-full" />
+                  <Skeleton className="h-3 w-14 rounded-full" />
+                </div>
+              </div>
+            ))}
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EmptyHistory() {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
+      <div className="w-20 h-20 rounded-full bg-[var(--color-surface-container)] flex items-center justify-center mb-4">
+        <span
+          className="material-symbols-outlined text-4xl text-[var(--color-outline)]"
+          style={{ fontVariationSettings: '"FILL" 0, "wght" 200' }}
+        >
+          receipt_long
+        </span>
+      </div>
+      <h3
+        className="font-semibold text-[var(--color-on-surface)] text-base mb-1"
+        style={{ fontFamily: 'var(--font-headline)' }}
+      >
+        Sin movimientos aún
+      </h3>
+      <p className="text-sm text-[var(--color-on-surface-variant)] leading-relaxed">
+        Tus adelantos y transacciones aparecerán aquí una vez que los realices.
+      </p>
+    </div>
+  )
+}
+
 export default function History() {
   const navigate = useNavigate()
   const employee = useEWAStore((s) => s.employee)
   const transactions = useEWAStore((s) => s.transactions)
   const pendingTransfer = useEWAStore((s) => s.pendingTransfer)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 900)
+    return () => clearTimeout(t)
+  }, [])
+
+  if (loading) return <HistorySkeleton />
 
   const allTx = pendingTransfer
     ? [{ ...pendingTransfer, type: 'advance', date: pendingTransfer.requestedAt, destination: pendingTransfer.wallet?.label }, ...transactions]
@@ -70,10 +146,7 @@ export default function History() {
           </h2>
 
           {allTx.length === 0 ? (
-            <div className="text-center py-12 text-[var(--color-on-surface-variant)]">
-              <span className="material-symbols-outlined text-5xl mb-3 block opacity-30">receipt_long</span>
-              <p className="text-sm">Aún no tienes movimientos</p>
-            </div>
+            <EmptyHistory />
           ) : (
             <Card className="divide-y divide-[var(--color-surface-container-low)]">
               {allTx.map((tx) => {
