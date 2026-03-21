@@ -2,12 +2,18 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
 
+// In demo mode (no Supabase), pre-populate state with mock auth so pages render without login
+const isDemoMode = !import.meta.env.VITE_SUPABASE_URL
+const INITIAL_AUTH = isDemoMode
+  ? { user: null, employerUser: null, company: null } // will be injected by MOCK_AUTH below
+  : { user: null, employerUser: null, company: null }
+
 export const useAuthStore = create(
   persist(
     (set, get) => ({
-      user: null,          // auth.User
-      employerUser: null,  // employer_users row
-      company: null,       // companies row
+      user:         isDemoMode ? { id: 'mock-user-1', email: 'rrhh@ripley.pe' } : null,
+      employerUser: isDemoMode ? { id: 'mock-eu-1', name: 'Carlos Mendoza', email: 'rrhh@ripley.pe', role: 'admin', company_id: '11111111-0000-0000-0000-000000000001' } : null,
+      company:      isDemoMode ? { id: '11111111-0000-0000-0000-000000000001', name: 'Ripley Perú S.A.', ruc: '20331268064', country: 'PE', ewa_limit_pct: 50, ewa_max_pct: 75, max_advances_per_month: 2, payroll_cycle: 'monthly', ewa_enabled: true } : null,
       loading: false,
       error: null,
 

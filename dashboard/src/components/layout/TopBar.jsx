@@ -1,7 +1,8 @@
 import { useCompanyStore } from '../../store/useCompanyStore'
 
 export default function TopBar({ title, actions }) {
-  const pendingAdvances = useCompanyStore(s => s.advances.filter(a => a.status === 'requested'))
+  const advances = useCompanyStore(s => s.advances)
+  const pendingAdvances = advances.filter(a => a.status === 'requested')
 
   return (
     <header className="h-16 bg-white border-b border-[#e2e5ec] flex items-center justify-between px-6 sticky top-0 z-30">
