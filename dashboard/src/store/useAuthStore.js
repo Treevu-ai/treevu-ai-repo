@@ -32,7 +32,7 @@ export const useAuthStore = create(
             .eq('auth_user_id', data.user.id)
             .single()
 
-          if (euErr || !eu) throw new Error('Usuario no encontrado en el sistema. Verifica con tu administrador.')
+          if (euErr || !eu) throw new Error(euErr?.message ?? euErr?.code ?? 'Usuario no encontrado en el sistema. Verifica con tu administrador.')
 
           set({
             user: data.user,
