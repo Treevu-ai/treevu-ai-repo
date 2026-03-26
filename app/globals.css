@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 160 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 160 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 30% 10%;
+    --primary: 158 64% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 160 25% 95%;
+    --secondary-foreground: 160 30% 20%;
+    --muted: 160 15% 96%;
+    --muted-foreground: 160 15% 45%;
+    --accent: 45 93% 58%;
+    --accent-foreground: 45 93% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 160 20% 90%;
+    --input: 160 20% 90%;
+    --ring: 158 64% 40%;
+    --radius: 0.75rem;
+    --chart-1: 158 64% 40%;
+    --chart-2: 160 60% 50%;
+    --chart-3: 45 93% 58%;
+    --chart-4: 200 80% 50%;
+    --chart-5: 280 60% 55%;
+    --treevu-emerald: 158 64% 40%;
+    --treevu-mint: 160 60% 85%;
+    --treevu-forest: 160 40% 25%;
+    --treevu-gold: 45 93% 58%;
+  }
+
+  .dark {
+    --background: 160 30% 5%;
+    --foreground: 160 10% 95%;
+    --card: 160 25% 8%;
+    --card-foreground: 160 10% 95%;
+    --popover: 160 25% 8%;
+    --popover-foreground: 160 10% 95%;
+    --primary: 158 64% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 160 25% 15%;
+    --secondary-foreground: 160 10% 90%;
+    --muted: 160 20% 15%;
+    --muted-foreground: 160 15% 60%;
+    --accent: 45 93% 55%;
+    --accent-foreground: 45 93% 10%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 160 20% 18%;
+    --input: 160 20% 18%;
+    --ring: 158 64% 45%;
+    --chart-1: 158 64% 45%;
+    --chart-2: 160 60% 55%;
+    --chart-3: 45 93% 55%;
+    --chart-4: 200 80% 55%;
+    --chart-5: 280 60% 60%;
+    --treevu-emerald: 158 64% 45%;
+    --treevu-mint: 160 40% 30%;
+    --treevu-forest: 160 40% 15%;
+    --treevu-gold: 45 93% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
