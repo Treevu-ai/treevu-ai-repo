@@ -10,6 +10,13 @@ export default function AppShell() {
   // In demo mode (no Supabase configured), inject mock auth
   const isDemoMode = !import.meta.env.VITE_SUPABASE_URL
 
+  // Refresh session on mount so page reloads don't drop the user
+  useEffect(() => {
+    if (!isDemoMode) {
+      useAuthStore.getState().refreshSession()
+    }
+  }, [isDemoMode])
+
   // Load company data once authenticated
   useEffect(() => {
     const companyId = company?.id ?? MOCK_AUTH.company.id

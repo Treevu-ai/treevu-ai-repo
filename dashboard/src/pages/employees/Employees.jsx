@@ -41,9 +41,20 @@ function AddEmployeeModal({ open, onClose }) {
       start_date: new Date().toISOString().slice(0,10),
     }
 
-    // TODO: real Supabase insert
-    // await supabase.from('employees').insert(emp)
-    addEmployee(emp)
+    if (import.meta.env.VITE_SUPABASE_URL) {
+      const { data, error } = await supabase.from('employees').insert({
+        ...emp,
+        auth_user_id: null,
+      }).select().single()
+      if (error) {
+        show({ message: error.message, type: 'error' })
+        setSaving(false)
+        return
+      }
+      addEmployee(data)
+    } else {
+      addEmployee(emp)
+    }
     show({ message: `${emp.name} agregado correctamente`, type: 'success' })
     setSaving(false)
     onClose()

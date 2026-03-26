@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
 import { calcEarnedWage, calcAvailable, calcDaysWorked } from '../utils/ewa'
 
-// ─── Mock data ─────────────────────────────────────────────────────────────────
+// ─── Mock data (used only when VITE_SUPABASE_URL is not set) ────────────────────
 const CYCLE_START = '2026-03-01'
 const CYCLE_END   = '2026-03-31'
 
@@ -59,53 +59,74 @@ export const useCompanyStore = create((set, get) => ({
 
   async load(companyId) {
     set({ loading: true, error: null })
+
+    const isDemoMode = !import.meta.env.VITE_SUPABASE_URL
+    if (isDemoMode) {
+      const company = { ewa_limit_pct: 50, ewa_max_pct: 75 }
+      const enriched = enrichEmployees(MOCK_EMPLOYEES, MOCK_ADVANCES, company)
+      set({
+        employees: enriched,
+        advances: MOCK_ADVANCES,
+        cycle: { period_start: CYCLE_START, period_end: CYCLE_END, payday: '2026-03-31', status: 'open' },
+        loading: false,
+      })
+      return
+    }
+
     try {
-      // TODO: replace with real Supabase queries when credentials available
-      const { data: empData } = await supabase
+      const { data: empData, error: empErr } = await supabase
         .from('employees')
         .select('*')
         .eq('company_id', companyId)
         .order('name')
-        .catch(() => ({ data: null }))
 
-      const { data: advData } = await supabase
+      if (empErr) throw empErr
+
+      const { data: advData, error: advErr } = await supabase
         .from('advances')
         .select('*, employees(name, base_salary)')
         .order('requested_at', { ascending: false })
-        .catch(() => ({ data: null }))
 
-      const { data: cycleData } = await supabase
+      if (advErr) throw advErr
+
+      const { data: cycleData, error: cycleErr } = await supabase
         .from('payroll_cycles')
         .select('*')
         .eq('company_id', companyId)
         .eq('status', 'open')
+        .order('period_start', { ascending: false })
+        .limit(1)
         .single()
-        .catch(() => ({ data: null }))
 
-      // Fall back to mock data
-      const employees = empData ?? MOCK_EMPLOYEES
-      const advances  = advData ?? MOCK_ADVANCES
+      if (cycleErr && cycleErr.code !== 'PGRST116') throw cycleErr
+
+      const employees = empData ?? []
+      const advances  = advData ?? []
       const cycle     = cycleData ?? { period_start: CYCLE_START, period_end: CYCLE_END, payday: '2026-03-31', status: 'open' }
 
-      const company = { ewa_limit_pct: 50, ewa_max_pct: 75 } // will be replaced by useAuthStore company
+      const company = { ewa_limit_pct: 50, ewa_max_pct: 75 }
       const enriched = enrichEmployees(employees, advances, company)
 
       set({ employees: enriched, advances, cycle, loading: false })
     } catch (err) {
-      // Full mock fallback
-      const company = { ewa_limit_pct: 50, ewa_max_pct: 75 }
-      const enriched = enrichEmployees(MOCK_EMPLOYEES, MOCK_ADVANCES, company)
-      set({ employees: enriched, advances: MOCK_ADVANCES, cycle: { period_start: CYCLE_START, period_end: CYCLE_END, payday: '2026-03-31', status: 'open' }, loading: false })
+      set({ error: err.message, loading: false })
     }
   },
 
-  // Optimistic status update
-  updateAdvanceStatus(id, status, extra = {}) {
+  // Optimistic status update + persist to Supabase
+  async updateAdvanceStatus(id, status, extra = {}) {
     set(s => ({
       advances: s.advances.map(a =>
         a.id === id ? { ...a, status, ...extra } : a
       )
     }))
+
+    if (import.meta.env.VITE_SUPABASE_URL) {
+      const patch = { status, updated_at: new Date().toISOString(), ...extra }
+      if (status === 'approved') patch.approved_at = new Date().toISOString()
+      if (status === 'rejected') patch.rejected_at = new Date().toISOString()
+      await supabase.from('advances').update(patch).eq('id', id)
+    }
   },
 
   addEmployee(emp) {

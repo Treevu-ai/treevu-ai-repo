@@ -6,6 +6,7 @@ import Button from '@/components/ui/Button'
 import Skeleton from '@/components/ui/Skeleton'
 import { useEWAStore } from '@/store/useEWAStore'
 import { haptics } from '@/utils/haptic'
+import { useAuthStore } from '@/store/useAuthStore'
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', minimumFractionDigits: 0 }).format(amount)
@@ -215,8 +216,11 @@ export default function Home() {
   const navigate = useNavigate()
   const employee = useEWAStore((s) => s.employee)
   const transactions = useEWAStore((s) => s.transactions)
+  const loadEmployeeData = useEWAStore((s) => s.loadEmployeeData)
+  const subscribeToAdvanceUpdates = useEWAStore((s) => s.subscribeToAdvanceUpdates)
+  const session = useAuthStore((s) => s.session)
 
-  const [loading, setLoading]       = useState(true)
+  const [loading, setLoading]       = useState(!employee)
   const [showTip, setShowTip]       = useState(false)
   const [pullDistance, setPullDist] = useState(0)
   const [refreshing, setRefreshing] = useState(false)
@@ -226,15 +230,26 @@ export default function Home() {
   const isPulling     = useRef(false)
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      setLoading(false)
-      // Show tip only if first-time (never advanced, tip not dismissed)
-      if (!localStorage.getItem(TIP_KEY) && employee.advanceCount === 0) {
-        setShowTip(true)
+    let unsubscribe
+
+    async function init() {
+      if (!employee) {
+        await loadEmployeeData()
       }
-    }, 900)
-    return () => clearTimeout(t)
-  }, [])
+      setLoading(false)
+
+      const emp = useEWAStore.getState().employee
+      if (emp) {
+        if (!localStorage.getItem(TIP_KEY) && emp.advanceCount === 0) {
+          setShowTip(true)
+        }
+        unsubscribe = subscribeToAdvanceUpdates(emp.id)
+      }
+    }
+
+    init()
+    return () => { if (unsubscribe) unsubscribe() }
+  }, [session])
 
   const dismissTip = useCallback(() => {
     setShowTip(false)
@@ -261,18 +276,18 @@ export default function Home() {
     if (!isPulling.current) return
     if (pullDistance >= 52) {
       setRefreshing(true)
-      setTimeout(() => {
+      loadEmployeeData().finally(() => {
         setRefreshing(false)
         setPullDist(0)
         isPulling.current = false
-      }, 1400)
+      })
     } else {
       setPullDist(0)
       isPulling.current = false
     }
-  }, [pullDistance])
+  }, [pullDistance, loadEmployeeData])
 
-  if (loading) return <HomeSkeleton />
+  if (loading || !employee) return <HomeSkeleton />
 
   const recentTx = transactions.slice(0, 3)
 

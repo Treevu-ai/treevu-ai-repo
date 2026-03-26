@@ -43,18 +43,32 @@ export default function OTP() {
     }
   }
 
+  const verifyOTP = useAuthStore((s) => s.verifyOTP)
+  const sendOTP = useAuthStore((s) => s.sendOTP)
+
   const handleVerify = async () => {
     const full = code.join('')
     if (full.length < 6) { setError('Ingresa el código completo'); return }
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 900))
-    // Mock: any 6-digit code works in demo
+    const result = await verifyOTP(phone, full)
+    if (!result.ok) {
+      setLoading(false)
+      setError('Código incorrecto o expirado')
+      return
+    }
     setLoading(false)
     if (pinCreated) {
       navigate('/home', { replace: true })
     } else {
       navigate('/pin/create', { replace: true })
     }
+  }
+
+  const handleResend = async () => {
+    if (!phone) return
+    setResendTimer(30)
+    setError('')
+    await sendOTP(phone)
   }
 
   const displayPhone = phone ? phone.replace('+51', '').trim() : '---'
@@ -120,7 +134,7 @@ export default function OTP() {
 
         <button
           disabled={resendTimer > 0}
-          onClick={() => { setResendTimer(30); setError('') }}
+          onClick={handleResend}
           className="text-center text-sm text-[var(--color-on-surface-variant)] disabled:opacity-50"
         >
           {resendTimer > 0

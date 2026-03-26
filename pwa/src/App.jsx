@@ -43,7 +43,7 @@ import Settings from '@/pages/settings/Settings'
 
 function ProtectedRoute({ children }) {
   const session = useAuthStore((s) => s.session)
-  // In demo mode, always allow access
+  if (!session) return <Navigate to="/login" replace />
   return children
 }
 
@@ -59,7 +59,7 @@ export default function App() {
         <Route path="/onboarding" element={<Onboarding />} />
 
         {/* Protected – with BottomNav */}
-        <Route element={<AppShell />}>
+        <Route element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
           <Route path="/home" element={<Home />} />
           <Route path="/advance" element={<AdvanceRequest />} />
           <Route path="/history" element={<History />} />
@@ -68,15 +68,15 @@ export default function App() {
         </Route>
 
         {/* Protected – without BottomNav (full-screen flows) */}
-        <Route path="/advance/confirm" element={<AdvanceConfirm />} />
-        <Route path="/advance/success" element={<AdvanceSuccess />} />
-        <Route path="/advance/unavailable" element={<AdvanceUnavailable />} />
-        <Route path="/history/:id" element={<MovementDetail />} />
-        <Route path="/accounts" element={<Accounts />} />
-        <Route path="/accounts/link-wallet" element={<LinkWallet />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/help" element={<Help />} />
-        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/advance/confirm" element={<ProtectedRoute><AdvanceConfirm /></ProtectedRoute>} />
+        <Route path="/advance/success" element={<ProtectedRoute><AdvanceSuccess /></ProtectedRoute>} />
+        <Route path="/advance/unavailable" element={<ProtectedRoute><AdvanceUnavailable /></ProtectedRoute>} />
+        <Route path="/history/:id" element={<ProtectedRoute><MovementDetail /></ProtectedRoute>} />
+        <Route path="/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
+        <Route path="/accounts/link-wallet" element={<ProtectedRoute><LinkWallet /></ProtectedRoute>} />
+        <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+        <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
+        <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
 
         {/* Default */}
         <Route path="/" element={<Navigate to="/login" replace />} />

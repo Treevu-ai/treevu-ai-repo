@@ -10,6 +10,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  const sendOTP = useAuthStore((s) => s.sendOTP)
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const clean = phone.replace(/\D/g, '')
@@ -19,9 +21,14 @@ export default function Login() {
     }
     setLoading(true)
     setError('')
-    // Simulate OTP send (replace with Supabase signInWithOtp)
-    await new Promise((r) => setTimeout(r, 800))
-    setPhone(`+51${clean}`)
+    const formatted = `+51${clean}`
+    const result = await sendOTP(formatted)
+    if (!result.ok) {
+      setError('No se pudo enviar el código. Intenta de nuevo.')
+      setLoading(false)
+      return
+    }
+    setPhone(formatted)
     setLoading(false)
     navigate('/otp')
   }

@@ -99,15 +99,21 @@ export default function AdvanceConfirm() {
   const navigate = useNavigate()
   const requestedAmount = useEWAStore((s) => s.requestedAmount)
   const selectedWallet = useEWAStore((s) => s.selectedWallet)
-  const confirmAdvance = useEWAStore((s) => s.confirmAdvance)
+  const submitAdvance = useEWAStore((s) => s.submitAdvance)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleConfirm = async () => {
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 1200))
-    confirmAdvance(requestedAmount, selectedWallet)
-    setLoading(false)
-    navigate('/advance/success', { replace: true })
+    setError('')
+    try {
+      await submitAdvance(requestedAmount, selectedWallet)
+      setLoading(false)
+      navigate('/advance/success', { replace: true })
+    } catch (err) {
+      setError(err.message ?? 'Error al enviar solicitud')
+      setLoading(false)
+    }
   }
 
   return (
@@ -173,6 +179,9 @@ export default function AdvanceConfirm() {
           </p>
         </div>
 
+        {error && (
+          <p className="text-[var(--color-error)] text-xs text-center px-1">{error}</p>
+        )}
         <Button onClick={handleConfirm} loading={loading}>
           Confirmar y recibir dinero
         </Button>
