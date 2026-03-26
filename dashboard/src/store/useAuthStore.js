@@ -25,19 +25,28 @@ export const useAuthStore = create(
           const { data, error } = await supabase.auth.signInWithPassword({ email, password })
           if (error) throw error
 
-          // Fetch employer_user + company in one go
+          // Fetch employer_user first
           const { data: eu, error: euErr } = await supabase
             .from('employer_users')
-            .select('*, companies(*)')
+            .select('*')
             .eq('auth_user_id', data.user.id)
             .single()
 
-          if (euErr || !eu) throw new Error(euErr?.message ?? euErr?.code ?? 'Usuario no encontrado en el sistema. Verifica con tu administrador.')
+          if (euErr || !eu) throw new Error(euErr?.message ?? euErr?.code ?? 'employer_user no encontrado')
+
+          // Fetch company separately
+          const { data: company, error: coErr } = await supabase
+            .from('companies')
+            .select('*')
+            .eq('id', eu.company_id)
+            .single()
+
+          if (coErr || !company) throw new Error(coErr?.message ?? coErr?.code ?? 'company no encontrada')
 
           set({
             user: data.user,
             employerUser: eu,
-            company: eu.companies,
+            company,
             loading: false,
           })
           return { ok: true }
