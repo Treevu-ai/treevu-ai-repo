@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { useToast } from '@/components/ui/use-toast'
 import NavBar from '@/components/dashboard/NavBar'
+import BottomNav from '@/components/dashboard/BottomNav'
 
 interface Employee {
   id: string
@@ -79,19 +80,13 @@ export default function RequestEWAForm({ employee }: { employee: Employee }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20 md:pb-0">
       <NavBar employee={employee} onLogout={handleLogout} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="mb-4"
-          >
-            ← Volver
-          </Button>
-          <h1 className="text-3xl font-bold text-slate-900">Solicitar Adelanto</h1>
+      <main className="container mx-auto px-4 py-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-900">Solicitar Adelanto</h1>
+          <p className="text-sm text-slate-600">Solicita tu dinero devengado</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -231,6 +226,8 @@ export default function RequestEWAForm({ employee }: { employee: Employee }) {
           </div>
         </div>
       </main>
+
+      <BottomNav />
     </div>
   )
 }

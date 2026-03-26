@@ -9,9 +9,19 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Treevu - Adelanto de Sueldo Responsable",
+  title: "Treevü - Adelanto de Sueldo",
   description: "Accede a tu salario ganado cuando lo necesites. Sin intereses, sin deudas. Bienestar financiero para empleados.",
   keywords: ["adelanto de sueldo", "EWA", "bienestar financiero", "fintech", "nomina"],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Treevü",
+  },
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png",
+  },
 }
 
 export const viewport: Viewport = {

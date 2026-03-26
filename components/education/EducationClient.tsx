@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
 import NavBar from '@/components/dashboard/NavBar'
+import BottomNav from '@/components/dashboard/BottomNav'
 
 interface Employee {
   first_name: string
@@ -108,19 +109,13 @@ export default function EducationClient({
   const completedModules = progress.filter((p) => p.completed).length
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20 md:pb-0">
       <NavBar employee={employee} onLogout={handleLogout} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="mb-4"
-          >
-            ← Volver
-          </Button>
-          <h1 className="text-3xl font-bold text-slate-900">Centro de Educación</h1>
+      <main className="container mx-auto px-4 py-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-900">Centro de Educación</h1>
+          <p className="text-sm text-slate-600">Aprende y gana XP</p>
         </div>
 
         {/* Stats */}
@@ -214,6 +209,8 @@ export default function EducationClient({
           })}
         </div>
       </main>
+
+      <BottomNav />
     </div>
   )
 }

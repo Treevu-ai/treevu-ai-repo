@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import NavBar from '@/components/dashboard/NavBar'
+import BottomNav from '@/components/dashboard/BottomNav'
 
 interface Employee {
   first_name: string
@@ -68,19 +69,13 @@ export default function HistoryClient({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20 md:pb-0">
       <NavBar employee={employee} onLogout={handleLogout} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="mb-4"
-          >
-            ← Volver
-          </Button>
-          <h1 className="text-3xl font-bold text-slate-900">Historial</h1>
+      <main className="container mx-auto px-4 py-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-900">Historial</h1>
+          <p className="text-sm text-slate-600">Tus solicitudes y transacciones</p>
         </div>
 
         <Card className="bg-white border-slate-200">
@@ -224,6 +219,8 @@ export default function HistoryClient({
           </CardContent>
         </Card>
       </main>
+
+      <BottomNav />
     </div>
   )
 }

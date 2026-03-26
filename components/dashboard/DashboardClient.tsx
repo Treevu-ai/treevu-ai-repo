@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
 import NavBar from '@/components/dashboard/NavBar'
+import BottomNav from '@/components/dashboard/BottomNav'
 import { User } from '@supabase/supabase-js'
 
 interface Employee {
@@ -96,10 +97,10 @@ export default function DashboardClient({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20 md:pb-0">
       <NavBar employee={employee} onLogout={handleLogout} />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Bienvenido, {employee.first_name}!</h1>
           <p className="text-slate-600 mt-2">{employee.position} en {employee.department}</p>
@@ -242,6 +243,8 @@ export default function DashboardClient({
           </Card>
         </div>
       </main>
+
+      <BottomNav />
     </div>
   )
 }
