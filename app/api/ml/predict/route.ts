@@ -1,7 +1,48 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
-// Mock ML predictions - En producción se conectaría a un servicio FastAPI
+// Helper function to calculate predictions
+function calculateWellnessPrediction(metrics: any[], employee: any) {
+  const avgScore = metrics && metrics.length > 0
+    ? metrics.reduce((sum: number, m: any) => sum + (m.wellness_score || 50), 0) / metrics.length
+    : employee?.financial_wellness_score || 50
+
+  const trend = metrics && metrics.length > 1
+    ? (metrics[0]?.wellness_score || 50) - (metrics[1]?.wellness_score || 50)
+    : 0
+
+  return {
+    type: 'wellness_score',
+    confidence: 0.85,
+    data: {
+      predicted_score: Math.round(Math.max(0, Math.min(100, avgScore + trend * 0.5))),
+      confidence: 0.85,
+      trend: trend > 0 ? 'up' : trend < 0 ? 'down' : 'stable',
+    },
+  }
+}
+
+function calculateDemandPrediction(recentRequests: any[], employee: any) {
+  const avgRequestAmount = recentRequests && recentRequests.length > 0
+    ? recentRequests.reduce((sum: number, r: any) => sum + (r.amount || 0), 0) / recentRequests.length
+    : 0
+
+  const requestFrequency = recentRequests?.length || 0
+  const monthlySalary = employee?.monthly_salary || 3000
+  const demandProbability = Math.min(100, (requestFrequency * 10) + (avgRequestAmount / monthlySalary * 50))
+
+  return {
+    type: 'ewa_demand',
+    confidence: 0.78,
+    data: {
+      probability: Math.round(demandProbability),
+      likely_amount: Math.round(avgRequestAmount || monthlySalary * 0.3),
+      predicted_next_request: '7-14 days',
+      confidence: 0.78,
+    },
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
@@ -17,11 +58,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { employee_id, type } = body
 
+    const targetEmployeeId = employee_id || user.id
+
     // Get employee data for prediction
     const { data: employee } = await supabase
       .from('employees')
       .select('*')
-      .eq('id', employee_id)
+      .eq('id', targetEmployeeId)
       .single()
 
     if (!employee) {
@@ -35,7 +78,7 @@ export async function POST(request: NextRequest) {
     const { data: metrics } = await supabase
       .from('financial_metrics')
       .select('*')
-      .eq('employee_id', employee_id)
+      .eq('employee_id', targetEmployeeId)
       .order('metric_date', { ascending: false })
       .limit(30)
 
@@ -43,47 +86,18 @@ export async function POST(request: NextRequest) {
     const { data: recentRequests } = await supabase
       .from('ewa_requests')
       .select('*')
-      .eq('employee_id', employee_id)
+      .eq('employee_id', targetEmployeeId)
       .order('requested_at', { ascending: false })
       .limit(10)
 
-    // Calculate predictions based on historical data
-    let prediction = {
-      type,
-      confidence: 0.85,
-      data: {} as any,
-    }
+    let prediction
 
     if (type === 'wellness_score') {
-      // Predict next wellness score
-      const avgScore = metrics && metrics.length > 0
-        ? metrics.reduce((sum, m) => sum + m.wellness_score, 0) / metrics.length
-        : 50
-
-      const trend = metrics && metrics.length > 1
-        ? metrics[0].wellness_score - metrics[1].wellness_score
-        : 0
-
-      prediction.data = {
-        predicted_score: Math.round(Math.max(0, Math.min(100, avgScore + trend * 0.5))),
-        confidence: 0.85,
-        trend: trend > 0 ? 'up' : trend < 0 ? 'down' : 'stable',
-      }
+      prediction = calculateWellnessPrediction(metrics || [], employee)
     } else if (type === 'ewa_demand') {
-      // Predict EWA demand probability
-      const avgRequestAmount = recentRequests && recentRequests.length > 0
-        ? recentRequests.reduce((sum, r) => sum + r.amount, 0) / recentRequests.length
-        : 0
-
-      const requestFrequency = recentRequests?.length || 0
-      const demandProbability = Math.min(100, (requestFrequency * 10) + (avgRequestAmount / employee.monthly_salary * 50))
-
-      prediction.data = {
-        probability: Math.round(demandProbability),
-        likely_amount: Math.round(avgRequestAmount || employee.monthly_salary * 0.3),
-        predicted_next_request: '7-14 days',
-        confidence: 0.78,
-      }
+      prediction = calculateDemandPrediction(recentRequests || [], employee)
+    } else {
+      return NextResponse.json({ error: 'Invalid prediction type' }, { status: 400 })
     }
 
     return NextResponse.json({
@@ -99,7 +113,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createClient()
 
@@ -119,46 +133,56 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (!employee) {
-      return NextResponse.json(
-        { error: 'Employee not found' },
-        { status: 404 }
-      )
+      // Return default predictions if no employee found
+      return NextResponse.json({
+        predictions: {
+          wellness: {
+            type: 'wellness_score',
+            confidence: 0.5,
+            data: {
+              predicted_score: 50,
+              confidence: 0.5,
+              trend: 'stable',
+            },
+          },
+          ewa_demand: {
+            type: 'ewa_demand',
+            confidence: 0.5,
+            data: {
+              probability: 30,
+              likely_amount: 500,
+              predicted_next_request: '14+ days',
+              confidence: 0.5,
+            },
+          },
+        },
+      })
     }
 
-    // Get wellness predictions
-    const wellnessReq = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/ml/predict`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          employee_id: user.id,
-          type: 'wellness_score',
-        }),
-      }
-    )
+    // Get financial metrics
+    const { data: metrics } = await supabase
+      .from('financial_metrics')
+      .select('*')
+      .eq('employee_id', user.id)
+      .order('metric_date', { ascending: false })
+      .limit(30)
 
-    const wellnessPrediction = await wellnessReq.json()
+    // Get recent EWA requests
+    const { data: recentRequests } = await supabase
+      .from('ewa_requests')
+      .select('*')
+      .eq('employee_id', user.id)
+      .order('requested_at', { ascending: false })
+      .limit(10)
 
-    // Get EWA demand predictions
-    const demandReq = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/ml/predict`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          employee_id: user.id,
-          type: 'ewa_demand',
-        }),
-      }
-    )
-
-    const demandPrediction = await demandReq.json()
+    // Calculate predictions directly (no internal fetch)
+    const wellnessPrediction = calculateWellnessPrediction(metrics || [], employee)
+    const demandPrediction = calculateDemandPrediction(recentRequests || [], employee)
 
     return NextResponse.json({
       predictions: {
-        wellness: wellnessPrediction.prediction,
-        ewa_demand: demandPrediction.prediction,
+        wellness: wellnessPrediction,
+        ewa_demand: demandPrediction,
       },
     })
   } catch (error) {
