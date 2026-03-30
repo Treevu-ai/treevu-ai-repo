@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
 
 // In demo mode (no Supabase), pre-populate state with mock auth so pages render without login
-const isDemoMode = !import.meta.env.VITE_SUPABASE_URL
+const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_DEMO_MODE === 'true'
 const INITIAL_AUTH = isDemoMode
   ? { user: null, employerUser: null, company: null } // will be injected by MOCK_AUTH below
   : { user: null, employerUser: null, company: null }

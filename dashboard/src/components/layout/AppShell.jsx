@@ -8,7 +8,7 @@ export default function AppShell() {
   const { user, company, employerUser } = useAuthStore()
 
   // In demo mode (no Supabase configured), inject mock auth
-  const isDemoMode = !import.meta.env.VITE_SUPABASE_URL
+  const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_DEMO_MODE === 'true'
 
   // Load company data once authenticated
   useEffect(() => {
