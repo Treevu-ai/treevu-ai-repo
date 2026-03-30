@@ -1,0 +1,14 @@
+# Claude Code internal files
+.claude/
+
+# Supabase CLI temp files
+supabase/.temp/
+supabase/supabase/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
