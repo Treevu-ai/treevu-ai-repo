@@ -1,0 +1,20 @@
+{
+  "name": "Treevü – Adelanto de Sueldo",
+  "short_name": "Treevü",
+  "description": "Accede a tu sueldo devengado cuando lo necesites, sin intereses.",
+  "start_url": "/home",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000666",
+  "theme_color": "#000666",
+  "lang": "es-PE",
+  "categories": ["finance"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
