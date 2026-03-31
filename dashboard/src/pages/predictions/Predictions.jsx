@@ -42,13 +42,42 @@ const ADOPTION_SCORES = {
   'emp-8': { score: 11, reasons: ['Empleado inactivo — adopción improbable en estado actual'] },
 }
 
-const NEXT_REQUESTS = [
-  { emp_id: 'emp-1', date: '02 abr 2026', amount: 480, confidence: 85, basis: 'Patrón cada ~7 días (2 ciclos consecutivos)' },
-  { emp_id: 'emp-2', date: '04 abr 2026', amount: 650, confidence: 78, basis: 'Patrón cada ~8 días (2 ciclos consecutivos)' },
-  { emp_id: 'emp-3', date: '08 abr 2026', amount: 500, confidence: 62, basis: 'Primera solicitud en procesamiento, probable reuso' },
-  { emp_id: 'emp-5', date: '10 abr 2026', amount: 400, confidence: 55, basis: 'Primera solicitud pendiente, historial limitado' },
-  { emp_id: 'emp-7', date: '12 abr 2026', amount: 600, confidence: 70, basis: 'Adelanto aprobado, patrón de uso regular proyectado' },
-]
+const MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']
+
+// Deriva predicciones dinámicamente del historial real de adelantos
+function buildNextRequests(employees, advances) {
+  return employees
+    .filter(e => e.active && e.ewa_enabled)
+    .map(emp => {
+      const history = advances.filter(
+        a => a.employee_id === emp.id && a.status !== 'rejected'
+      )
+      if (history.length === 0) return null
+
+      // Monto: promedio del historial, redondeado a 50
+      const avgRaw = history.reduce((s, a) => s + a.amount, 0) / history.length
+      const amount = Math.round(avgRaw / 50) * 50
+
+      // Fecha: mismo día promedio del ciclo → proyectar en abril 2026
+      const avgDay = Math.round(
+        history.reduce((s, a) => s + new Date(a.requested_at).getDate(), 0) / history.length
+      )
+      const d = new Date(2026, 3, Math.min(avgDay, 30))
+      const date = `${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`
+
+      // Confianza: sube con más historial, techo 85%
+      const confidence = Math.min(50 + history.length * 15, 85)
+
+      // Base textual
+      const basis = history.length >= 2
+        ? `Promedio de ${history.length} adelantos (${history.map(a => `S/${a.amount}`).join(', ')})`
+        : `Primera solicitud del ciclo (S/${history[0].amount})`
+
+      return { emp_id: emp.id, date, amount, confidence, basis }
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.date.localeCompare(b.date))
+}
 
 const ANOMALIES = [
   {
@@ -138,10 +167,11 @@ function SectionHeader({ icon, number, title, subtitle }) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Predictions() {
-  const { employees } = useCompanyStore()
+  const { employees, advances } = useCompanyStore()
 
   const nonEwaEmployees   = employees.filter(e => e.active && !e.ewa_enabled)
   const activeEmployees   = employees.filter(e => e.active)
+  const nextRequests      = buildNextRequests(employees, advances)
   const highRiskCount     = Object.values(RISK_SCORES).filter(r => r.level === 'high').length
   const forecastTotal     = FORECAST.reduce((s, d) => s + d.count, 0)
   const forecastAmount    = FORECAST.reduce((s, d) => s + d.amount, 0)
@@ -352,7 +382,7 @@ export default function Predictions() {
               </tr>
             </thead>
             <tbody>
-              {NEXT_REQUESTS.map(req => {
+              {nextRequests.map(req => {
                 const emp = employees.find(e => e.id === req.emp_id)
                 if (!emp) return null
                 return (
