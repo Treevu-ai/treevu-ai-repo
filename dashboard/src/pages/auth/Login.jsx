@@ -10,7 +10,7 @@ export default function Login() {
   const { login, loading, error, clearError } = useAuthStore()
   const navigate = useNavigate()
 
-  const isDemoMode = !import.meta.env.VITE_SUPABASE_URL
+  const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_DEMO_MODE === 'true'
 
   async function handleSubmit(e) {
     e.preventDefault()
