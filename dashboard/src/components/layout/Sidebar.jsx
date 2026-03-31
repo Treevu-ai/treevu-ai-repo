@@ -5,8 +5,9 @@ import { useToast } from '../ui/Toast'
 const NAV = [
   { to: '/',            icon: 'dashboard',     label: 'Resumen'    },
   { to: '/employees',   icon: 'group',         label: 'Empleados'  },
-  { to: '/advances',    icon: 'payments',      label: 'Avances'    },
-  { to: '/settings',    icon: 'settings',      label: 'Configuración' },
+  { to: '/advances',     icon: 'payments',      label: 'Avances'        },
+  { to: '/predictions',  icon: 'psychology',    label: 'Predicciones'   },
+  { to: '/settings',     icon: 'settings',      label: 'Configuración'  },
 ]
 
 export default function Sidebar() {

@@ -8,6 +8,7 @@ import Employees      from './pages/employees/Employees'
 import EmployeeDetail from './pages/employees/EmployeeDetail'
 import Advances       from './pages/advances/Advances'
 import Settings       from './pages/settings/Settings'
+import Predictions    from './pages/predictions/Predictions'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="employees/:id"     element={<EmployeeDetail />} />
           <Route path="advances"          element={<Advances />} />
           <Route path="settings"          element={<Settings />} />
+          <Route path="predictions"       element={<Predictions />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
