@@ -211,6 +211,20 @@ function EditModal({ open, onClose, emp }) {
         <Input label="Email" type="email" value={form.email ?? ''} onChange={e => set('email', e.target.value)} containerClass="col-span-2" />
         <Input label="Salario base (PEN)" type="number" value={form.base_salary} onChange={e => set('base_salary', parseFloat(e.target.value))} suffix="PEN" />
         <Input label="Cargo" value={form.position ?? ''} onChange={e => set('position', e.target.value)} />
+        <div className="col-span-2 border-t border-[#e2e5ec] pt-3">
+          <p className="text-xs font-semibold text-[#374151] mb-2">Límite EWA personalizado</p>
+          <Input
+            label="Límite EWA (%) — dejar vacío para usar el global"
+            type="number"
+            value={form.ewa_custom_limit_pct ?? ''}
+            onChange={e => set('ewa_custom_limit_pct', e.target.value === '' ? null : parseFloat(e.target.value))}
+            suffix="%"
+            placeholder="Ej: 60"
+          />
+          <p className="text-[10px] text-[#9ca3af] mt-1">
+            Si se configura, sobreescribe el límite global de la empresa ({emp.ewa_custom_limit_pct ? `actualmente ${emp.ewa_custom_limit_pct}%` : 'usando global'}).
+          </p>
+        </div>
       </div>
     </Modal>
   )

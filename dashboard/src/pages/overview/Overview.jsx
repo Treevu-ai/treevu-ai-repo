@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar,
 } from 'recharts'
@@ -6,7 +6,10 @@ import { useCompanyStore } from '../../store/useCompanyStore'
 import { useAuthStore, MOCK_AUTH } from '../../store/useAuthStore'
 import { KpiCard } from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
+import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
 import TopBar from '../../components/layout/TopBar'
+import { useToast } from '../../components/ui/Toast'
 import { currency, dateTime, relativeTime } from '../../utils/format'
 
 // Build chart data: advances per day this month
@@ -41,6 +44,37 @@ export default function Overview() {
   const { advances, employees, cycle, loading } = useCompanyStore()
   const { company } = useAuthStore()
   const co = company ?? MOCK_AUTH.company
+  const { show } = useToast()
+  const [showCierre, setShowCierre] = useState(false)
+
+  function exportCycleCsv() {
+    const paid = advances.filter(a => ['paid','processing','approved'].includes(a.status))
+    const byEmp = {}
+    paid.forEach(a => {
+      byEmp[a.employee_id] = (byEmp[a.employee_id] ?? 0) + a.amount
+    })
+    const rows = [
+      ['Empleado','DNI','Departamento','Cargo','Salario base','Total adelantos','A descontar en nómina'],
+      ...employees.map(emp => [
+        emp.name,
+        emp.dni ?? '',
+        emp.department ?? '',
+        emp.position ?? '',
+        emp.base_salary,
+        byEmp[emp.id] ?? 0,
+        byEmp[emp.id] ?? 0,
+      ]),
+    ]
+    const csv  = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href = url
+    a.download = `cierre_ciclo_${cycle?.period_end ?? 'ciclo'}.csv`
+    a.click(); URL.revokeObjectURL(url)
+    setShowCierre(false)
+    show({ message: 'Reporte de cierre exportado', type: 'success' })
+  }
 
   const activeEmps    = employees.filter(e => e.active)
   const ewaEnabled    = employees.filter(e => e.active && e.ewa_enabled)
@@ -203,14 +237,65 @@ export default function Overview() {
 
         {/* Cycle info */}
         {cycle && (
-          <div className="flex items-center gap-3 p-4 rounded-[10px] bg-[#eef0ff] border border-[#c7d2fe]">
-            <span className="material-symbols-outlined icon-filled text-[22px] text-[#000666]">calendar_month</span>
-            <div>
-              <p className="text-sm font-semibold text-[#000666]">Ciclo activo: {cycle.period_start} → {cycle.period_end}</p>
-              <p className="text-xs text-[#4b5563]">Día de pago: {cycle.payday} · Límite EWA: {co.ewa_limit_pct}% del salario devengado</p>
+          <div className="flex items-center justify-between gap-3 p-4 rounded-[10px] bg-[#eef0ff] border border-[#c7d2fe]">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined icon-filled text-[22px] text-[#000666]">calendar_month</span>
+              <div>
+                <p className="text-sm font-semibold text-[#000666]">Ciclo activo: {cycle.period_start} → {cycle.period_end}</p>
+                <p className="text-xs text-[#4b5563]">Día de pago: {cycle.payday} · Límite EWA: {co.ewa_limit_pct}% del salario devengado</p>
+              </div>
             </div>
+            <Button variant="secondary" size="sm" icon="download" onClick={() => setShowCierre(true)}>
+              Cerrar ciclo y exportar
+            </Button>
           </div>
         )}
+
+        {/* Cierre modal */}
+        <Modal
+          open={showCierre}
+          onClose={() => setShowCierre(false)}
+          title="Cerrar ciclo y exportar planilla"
+          size="sm"
+          footer={<>
+            <Button variant="secondary" onClick={() => setShowCierre(false)}>Cancelar</Button>
+            <Button icon="download" onClick={exportCycleCsv}>Exportar CSV</Button>
+          </>}
+        >
+          <div className="space-y-3">
+            <p className="text-sm text-[#4b5563]">
+              Se generará un archivo CSV con el resumen de adelantos del ciclo <strong>{cycle?.period_start} → {cycle?.period_end}</strong> listo para importar en tu sistema de nómina.
+            </p>
+            <div className="p-3 rounded-[8px] bg-[#f8f9fb] border border-[#e2e5ec] space-y-1.5">
+              {advances
+                .filter(a => ['paid','processing','approved'].includes(a.status))
+                .reduce((acc, a) => {
+                  acc[a.employee_id] = (acc[a.employee_id] ?? 0) + a.amount
+                  return acc
+                }, {}) &&
+                Object.entries(
+                  advances
+                    .filter(a => ['paid','processing','approved'].includes(a.status))
+                    .reduce((acc, a) => { acc[a.employee_id] = (acc[a.employee_id] ?? 0) + a.amount; return acc }, {})
+                ).map(([eid, total]) => {
+                  const emp = employees.find(e => e.id === eid)
+                  return (
+                    <div key={eid} className="flex justify-between text-xs">
+                      <span className="text-[#374151]">{emp?.name ?? eid}</span>
+                      <span className="font-semibold text-[#111827]">{currency(total)}</span>
+                    </div>
+                  )
+                })
+              }
+            </div>
+            <div className="flex justify-between text-sm font-semibold pt-1 border-t border-[#e2e5ec]">
+              <span className="text-[#374151]">Total a descontar en planilla</span>
+              <span className="text-[#000666]">
+                {currency(advances.filter(a => ['paid','processing','approved'].includes(a.status)).reduce((s,a)=>s+a.amount,0))}
+              </span>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   )

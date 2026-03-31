@@ -1,18 +1,22 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/useAuthStore'
 import { useToast } from '../ui/Toast'
+import { useNotifications } from '../../pages/notifications/Notifications'
 
 const NAV = [
-  { to: '/',            icon: 'dashboard',     label: 'Resumen'    },
-  { to: '/employees',   icon: 'group',         label: 'Empleados'  },
-  { to: '/advances',     icon: 'payments',      label: 'Avances'        },
-  { to: '/predictions',  icon: 'psychology',    label: 'Predicciones'   },
-  { to: '/settings',     icon: 'settings',      label: 'Configuración'  },
+  { to: '/',             icon: 'dashboard',   label: 'Resumen'       },
+  { to: '/employees',    icon: 'group',       label: 'Empleados'     },
+  { to: '/advances',     icon: 'payments',    label: 'Avances'       },
+  { to: '/predictions',  icon: 'psychology',  label: 'Predicciones'  },
+  { to: '/impact',       icon: 'trending_up', label: 'Impacto'       },
+  { to: '/settings',     icon: 'settings',    label: 'Configuración' },
 ]
 
 export default function Sidebar() {
   const { company, employerUser, logout } = useAuthStore()
   const { show } = useToast()
+  const notifications = useNotifications()
+  const notifCount = notifications.length
   const navigate = useNavigate()
 
   async function handleLogout() {
@@ -88,6 +92,28 @@ export default function Sidebar() {
             </div>
           </div>
         )}
+        <NavLink
+          to="/notifications"
+          className={({ isActive }) => `
+            w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-sm font-medium mb-1
+            transition-colors duration-150
+            ${isActive ? 'bg-white text-[#000666]' : 'text-white/70 hover:bg-white/10 hover:text-white'}
+          `}
+        >
+          {({ isActive }) => (
+            <>
+              <span className={`material-symbols-outlined text-[20px] ${isActive ? 'icon-filled' : ''}`}>
+                notifications
+              </span>
+              <span className="flex-1">Notificaciones</span>
+              {notifCount > 0 && (
+                <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#dc2626] text-white text-[10px] font-bold flex items-center justify-center">
+                  {notifCount}
+                </span>
+              )}
+            </>
+          )}
+        </NavLink>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-white/60 hover:bg-white/10 hover:text-white text-sm transition-colors"

@@ -107,12 +107,43 @@ export default function Advances() {
     setRejectTarget(null)
   }
 
+  function exportCSV() {
+    const rows = [
+      ['Empleado','DNI','Departamento','Monto (PEN)','Estado','Método','Solicitado','Pagado'],
+      ...advances.map(a => {
+        const emp = employees.find(e => e.id === a.employee_id)
+        return [
+          emp?.name ?? '',
+          emp?.dni  ?? '',
+          emp?.department ?? '',
+          a.amount,
+          a.status,
+          a.disbursement_method ?? '',
+          a.requested_at ? new Date(a.requested_at).toLocaleString('es-PE') : '',
+          a.paid_at       ? new Date(a.paid_at).toLocaleString('es-PE')       : '',
+        ]
+      }),
+    ]
+    const csv  = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href = url; a.download = `avances_${new Date().toISOString().slice(0,10)}.csv`
+    a.click(); URL.revokeObjectURL(url)
+    show({ message: 'CSV exportado', type: 'success' })
+  }
+
   return (
     <div className="flex flex-col h-full">
       <TopBar title="Avances EWA" actions={
-        <div className="flex items-center gap-2 text-xs text-[#6b7280]">
-          <span className="w-2 h-2 rounded-full bg-[#16a34a] animate-pulse" />
-          Actualización en tiempo real
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-xs text-[#6b7280]">
+            <span className="w-2 h-2 rounded-full bg-[#16a34a] animate-pulse" />
+            Tiempo real
+          </div>
+          <Button variant="secondary" size="sm" icon="download" onClick={exportCSV}>
+            Exportar CSV
+          </Button>
         </div>
       } />
 
