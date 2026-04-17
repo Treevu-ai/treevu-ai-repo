@@ -214,6 +214,8 @@ const TIP_KEY = 'treevu_tip_dismissed'
 export default function Home() {
   const navigate = useNavigate()
   const employee = useEWAStore((s) => s.employee)
+  const loadEmployee = useEWAStore((s) => s.loadEmployee)
+  const storeLoading = useEWAStore((s) => s.loading)
   const transactions = useEWAStore((s) => s.transactions)
 
   const [loading, setLoading]       = useState(true)
@@ -226,14 +228,12 @@ export default function Home() {
   const isPulling     = useRef(false)
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    loadEmployee().finally(() => {
       setLoading(false)
-      // Show tip only if first-time (never advanced, tip not dismissed)
-      if (!localStorage.getItem(TIP_KEY) && employee.advanceCount === 0) {
+      if (!localStorage.getItem(TIP_KEY) && (employee?.advanceCount ?? 0) === 0) {
         setShowTip(true)
       }
-    }, 900)
-    return () => clearTimeout(t)
+    })
   }, [])
 
   const dismissTip = useCallback(() => {

@@ -2,27 +2,33 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '@/components/ui/Button'
 import { useAuthStore } from '@/store/useAuthStore'
+import { supabase } from '@/lib/supabase'
 
 export default function Login() {
-  const navigate = useNavigate()
-  const setPhone = useAuthStore((s) => s.setPhone)
-  const [phone, setPhoneLocal] = useState('')
+  const navigate  = useNavigate()
+  const setPhone  = useAuthStore((s) => s.setPhone)   // reused as "identifier" store key
+  const [email, setEmail]     = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [error, setError]     = useState('')
+
+  const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const clean = phone.replace(/\D/g, '')
-    if (clean.length < 9) {
-      setError('Ingresa un número válido de 9 dígitos')
-      return
-    }
+    if (!isValid) { setError('Ingresa un email válido'); return }
     setLoading(true)
     setError('')
-    // Simulate OTP send (replace with Supabase signInWithOtp)
-    await new Promise((r) => setTimeout(r, 800))
-    setPhone(`+51${clean}`)
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email: email.trim().toLowerCase(),
+      options: { shouldCreateUser: false },   // only registered employees can log in
+    })
     setLoading(false)
+    if (otpError) {
+      setError('No encontramos ese email. Contacta a tu empleador.')
+      console.error('[Login] OTP error:', otpError.message)
+      return
+    }
+    setPhone(email.trim().toLowerCase())   // store identifier for OTP screen
     navigate('/otp')
   }
 
@@ -30,12 +36,10 @@ export default function Login() {
     <div className="app-container flex flex-col min-h-dvh">
       {/* Hero */}
       <div className="editorial-gradient flex flex-col justify-end px-6 pt-20 pb-10 relative overflow-hidden">
-        {/* Background decoration */}
         <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/5" />
         <div className="absolute top-8 -left-8 w-40 h-40 rounded-full bg-[var(--color-secondary)]/10" />
 
         <div className="relative z-10">
-          {/* Logo */}
           <div className="flex items-center gap-2 mb-8">
             <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
               <span className="material-symbols-outlined text-white text-lg">account_tree</span>
@@ -68,46 +72,34 @@ export default function Login() {
               className="text-[var(--color-on-surface)] font-bold text-xl mb-1"
               style={{ fontFamily: 'var(--font-headline)' }}
             >
-              Ingresa tu número
+              Ingresa tu correo
             </h2>
             <p className="text-[var(--color-on-surface-variant)] text-sm">
               Te enviaremos un código de verificación
             </p>
           </div>
 
-          <div className="relative flex items-center">
-            <div className="absolute left-4 flex items-center gap-2 text-[var(--color-on-surface)] text-sm font-semibold select-none z-10">
-              <span>🇵🇪</span>
-              <span>+51</span>
-              <div className="w-px h-4 bg-[var(--color-outline-variant)] ml-1" />
-            </div>
-            <input
-              type="tel"
-              inputMode="numeric"
-              placeholder="9XX XXX XXX"
-              value={phone}
-              onChange={(e) => {
-                setError('')
-                setPhoneLocal(e.target.value.replace(/[^\d\s]/g, ''))
-              }}
-              maxLength={11}
-              className="
-                w-full h-14 rounded-[var(--radius-xl)] pl-28 pr-4
-                bg-[var(--color-surface-container-high)]
-                text-[var(--color-on-surface)] text-[15px] font-semibold
-                placeholder:text-[var(--color-outline)] placeholder:font-normal
-                focus:outline-none focus:bg-[var(--color-surface-container-lowest)]
-                focus:ring-1 focus:ring-[rgba(0,6,102,0.2)]
-                transition-all duration-150
-              "
-            />
-          </div>
+          <input
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="tu@correo.com"
+            value={email}
+            onChange={(e) => { setError(''); setEmail(e.target.value) }}
+            className="
+              w-full h-14 rounded-[var(--radius-xl)] px-4
+              bg-[var(--color-surface-container-high)]
+              text-[var(--color-on-surface)] text-[15px]
+              placeholder:text-[var(--color-outline)] placeholder:font-normal
+              focus:outline-none focus:bg-[var(--color-surface-container-lowest)]
+              focus:ring-1 focus:ring-[rgba(0,6,102,0.2)]
+              transition-all duration-150
+            "
+          />
 
-          {error && (
-            <p className="text-[var(--color-error)] text-xs px-1">{error}</p>
-          )}
+          {error && <p className="text-[var(--color-error)] text-xs px-1">{error}</p>}
 
-          <Button type="submit" loading={loading} disabled={phone.replace(/\D/g, '').length < 9}>
+          <Button type="submit" loading={loading} disabled={!isValid}>
             Continuar
           </Button>
 

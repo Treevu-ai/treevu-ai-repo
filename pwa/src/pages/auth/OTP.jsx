@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '@/components/ui/Button'
 import { useAuthStore } from '@/store/useAuthStore'
+import { supabase } from '@/lib/supabase'
 
 export default function OTP() {
   const navigate = useNavigate()
@@ -47,9 +48,20 @@ export default function OTP() {
     const full = code.join('')
     if (full.length < 6) { setError('Ingresa el código completo'); return }
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 900))
-    // Mock: any 6-digit code works in demo
+    setError('')
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      email: phone,
+      token: full,
+      type: 'email',
+    })
     setLoading(false)
+    if (verifyError) {
+      setError('Código incorrecto o expirado. Intenta de nuevo.')
+      setCode(['', '', '', '', '', ''])
+      inputs.current[0]?.focus()
+      return
+    }
+    // Session is now set — auth listener in useAuthStore picks it up
     if (pinCreated) {
       navigate('/home', { replace: true })
     } else {
@@ -57,7 +69,11 @@ export default function OTP() {
     }
   }
 
-  const displayPhone = phone ? phone.replace('+51', '').trim() : '---'
+  const handleResend = async () => {
+    setResendTimer(30)
+    setError('')
+    await supabase.auth.signInWithOtp({ email: phone, options: { shouldCreateUser: false } })
+  }
 
   return (
     <div className="app-container flex flex-col min-h-dvh px-6">
@@ -70,7 +86,7 @@ export default function OTP() {
         </button>
 
         <div className="w-16 h-16 rounded-2xl editorial-gradient flex items-center justify-center mb-6">
-          <span className="material-symbols-outlined text-white text-3xl">sms</span>
+          <span className="material-symbols-outlined text-white text-3xl">mark_email_unread</span>
         </div>
 
         <h1
@@ -80,8 +96,8 @@ export default function OTP() {
           Código de verificación
         </h1>
         <p className="text-[var(--color-on-surface-variant)] text-sm leading-relaxed">
-          Enviamos un código de 6 dígitos al<br />
-          <span className="font-semibold text-[var(--color-on-surface)]">+51 {displayPhone}</span>
+          Enviamos un código de 6 dígitos a<br />
+          <span className="font-semibold text-[var(--color-on-surface)]">{phone ?? '---'}</span>
         </p>
       </div>
 
@@ -120,7 +136,7 @@ export default function OTP() {
 
         <button
           disabled={resendTimer > 0}
-          onClick={() => { setResendTimer(30); setError('') }}
+          onClick={handleResend}
           className="text-center text-sm text-[var(--color-on-surface-variant)] disabled:opacity-50"
         >
           {resendTimer > 0
