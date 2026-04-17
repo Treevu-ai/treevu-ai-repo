@@ -20,7 +20,7 @@ export default function Login() {
     setError('')
     const { error: otpError } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
-      options: { shouldCreateUser: false },   // only registered employees can log in
+      options: { shouldCreateUser: true },
     })
     setLoading(false)
     if (otpError) {
