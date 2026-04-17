@@ -24,8 +24,8 @@ export default function Login() {
     })
     setLoading(false)
     if (otpError) {
-      setError('No encontramos ese email. Contacta a tu empleador.')
-      console.error('[Login] OTP error:', otpError.message)
+      setError(otpError.message)
+      console.error('[Login] OTP error:', otpError)
       return
     }
     setPhone(email.trim().toLowerCase())   // store identifier for OTP screen
