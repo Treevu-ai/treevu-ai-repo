@@ -216,6 +216,7 @@ export default function Home() {
   const navigate = useNavigate()
   const employee = useEWAStore((s) => s.employee)
   const loadEmployee = useEWAStore((s) => s.loadEmployee)
+  const authLogout = useAuthStore((s) => s.logout)
   const storeLoading = useEWAStore((s) => s.loading)
   const storeError = useEWAStore((s) => s.error)
   const transactions = useEWAStore((s) => s.transactions)
@@ -294,6 +295,15 @@ export default function Home() {
           </p>
           <div className="flex flex-col gap-2">
             <Button onClick={() => window.location.reload()}>Reintentar</Button>
+            <Button
+              variant="tertiary"
+              onClick={async () => {
+                await authLogout()
+                navigate('/login', { replace: true })
+              }}
+            >
+              Cerrar sesión
+            </Button>
           </div>
         </Card>
       </div>
