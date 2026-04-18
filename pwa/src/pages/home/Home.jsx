@@ -272,7 +272,7 @@ export default function Home() {
     }
   }, [pullDistance])
 
-  if (loading) return <HomeSkeleton />
+  if (loading || !employee) return <HomeSkeleton />
 
   const recentTx = transactions.slice(0, 3)
 

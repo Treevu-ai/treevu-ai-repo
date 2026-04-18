@@ -26,6 +26,7 @@ export const useEWAStore = create((set, get) => ({
   employee:        null,
   cycle:           null,
   advances:        [],
+  transactions:    [],
   wallets:         [],
   loading:         false,
   error:           null,
