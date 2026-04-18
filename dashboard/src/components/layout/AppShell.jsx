@@ -3,12 +3,10 @@ import { Navigate, Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import { useAuthStore, MOCK_AUTH } from '../../store/useAuthStore'
 import { useCompanyStore } from '../../store/useCompanyStore'
+import { isDemoMode } from '../../lib/runtime'
 
 export default function AppShell() {
-  const { user, company, employerUser } = useAuthStore()
-
-  // In demo mode (no Supabase configured), inject mock auth
-  const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_DEMO_MODE === 'true'
+  const { user, company } = useAuthStore()
 
   // Load company data once authenticated
   useEffect(() => {

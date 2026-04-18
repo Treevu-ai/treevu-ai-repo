@@ -8,6 +8,7 @@ import Input from '../../components/ui/Input'
 import TopBar from '../../components/layout/TopBar'
 import { currency, dateTime, relativeTime, initials } from '../../utils/format'
 import { supabase } from '../../lib/supabase'
+import { hasSupabaseConfig } from '../../lib/runtime'
 
 const TABS = [
   { val: 'all',        label: 'Todos'      },
@@ -50,7 +51,7 @@ export default function Advances() {
 
   // Supabase real-time subscription
   useEffect(() => {
-    if (!import.meta.env.VITE_SUPABASE_URL) return // demo mode, skip
+    if (!hasSupabaseConfig) return // demo/misconfigured mode, skip
     const channel = supabase
       .channel('advances_realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'advances' }, payload => {

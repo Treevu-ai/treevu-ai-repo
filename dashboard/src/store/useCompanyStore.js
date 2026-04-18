@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
 import { calcEarnedWage, calcAvailable, calcDaysWorked } from '../utils/ewa'
+import { hasSupabaseConfig, isDemoMode } from '../lib/runtime'
 
 // ─── Mock data ─────────────────────────────────────────────────────────────────
 const CYCLE_START = '2026-03-01'
@@ -59,43 +60,60 @@ export const useCompanyStore = create((set, get) => ({
 
   async load(companyId) {
     set({ loading: true, error: null })
+
+    if (!isDemoMode && !hasSupabaseConfig) {
+      set({
+        loading: false,
+        error: 'Dashboard en modo real sin configuración de Supabase. Define VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY.',
+      })
+      return
+    }
+
+    if (isDemoMode) {
+      const company = { ewa_limit_pct: 50, ewa_max_pct: 75 }
+      const enriched = enrichEmployees(MOCK_EMPLOYEES, MOCK_ADVANCES, company)
+      set({
+        employees: enriched,
+        advances: MOCK_ADVANCES,
+        cycle: { period_start: CYCLE_START, period_end: CYCLE_END, payday: '2026-03-31', status: 'open' },
+        loading: false,
+      })
+      return
+    }
+
     try {
-      // TODO: replace with real Supabase queries when credentials available
-      const { data: empData } = await supabase
+      const { data: empData, error: empError } = await supabase
         .from('employees')
         .select('*')
         .eq('company_id', companyId)
         .order('name')
-        .catch(() => ({ data: null }))
+      if (empError) throw empError
 
-      const { data: advData } = await supabase
+      const { data: advData, error: advError } = await supabase
         .from('advances')
         .select('*, employees(name, base_salary)')
         .order('requested_at', { ascending: false })
-        .catch(() => ({ data: null }))
+      if (advError) throw advError
 
-      const { data: cycleData } = await supabase
+      const { data: cycleData, error: cycleError } = await supabase
         .from('payroll_cycles')
         .select('*')
         .eq('company_id', companyId)
         .eq('status', 'open')
         .single()
-        .catch(() => ({ data: null }))
+      if (cycleError) throw cycleError
 
-      // Fall back to mock data
-      const employees = empData ?? MOCK_EMPLOYEES
-      const advances  = advData ?? MOCK_ADVANCES
-      const cycle     = cycleData ?? { period_start: CYCLE_START, period_end: CYCLE_END, payday: '2026-03-31', status: 'open' }
+      const employees = empData ?? []
+      const advances  = advData ?? []
+      const cycle     = cycleData ?? null
 
       const company = { ewa_limit_pct: 50, ewa_max_pct: 75 } // will be replaced by useAuthStore company
       const enriched = enrichEmployees(employees, advances, company)
 
       set({ employees: enriched, advances, cycle, loading: false })
     } catch (err) {
-      // Full mock fallback
-      const company = { ewa_limit_pct: 50, ewa_max_pct: 75 }
-      const enriched = enrichEmployees(MOCK_EMPLOYEES, MOCK_ADVANCES, company)
-      set({ employees: enriched, advances: MOCK_ADVANCES, cycle: { period_start: CYCLE_START, period_end: CYCLE_END, payday: '2026-03-31', status: 'open' }, loading: false })
+      const error = err?.message || 'No se pudieron cargar empleados ni avances de la empresa.'
+      set({ loading: false, error })
     }
   },
 
