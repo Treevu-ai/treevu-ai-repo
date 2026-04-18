@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '@/components/ui/Button'
 import { useAuthStore } from '@/store/useAuthStore'
@@ -6,7 +6,14 @@ import { supabase } from '@/lib/supabase'
 
 export default function Login() {
   const navigate  = useNavigate()
-  const setPhone  = useAuthStore((s) => s.setPhone)   // reused as "identifier" store key
+  const setPhone  = useAuthStore((s) => s.setPhone)
+  const session   = useAuthStore((s) => s.session)
+
+  useEffect(() => {
+    if (session) navigate('/home', { replace: true })
+  }, [session])
+
+
   const [email, setEmail]     = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
