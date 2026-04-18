@@ -9,7 +9,7 @@ export default function OTP() {
   const phone = useAuthStore((s) => s.phone)
   const setPinCreated = useAuthStore((s) => s.setPinCreated)
   const pinCreated = useAuthStore((s) => s.pinCreated)
-  const [code, setCode] = useState(['', '', '', '', '', ''])
+  const [code, setCode] = useState(['', '', '', '', '', '', '', ''])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [resendTimer, setResendTimer] = useState(30)
@@ -27,7 +27,7 @@ export default function OTP() {
     next[i] = val
     setCode(next)
     setError('')
-    if (val && i < 5) inputs.current[i + 1]?.focus()
+    if (val && i < 7) inputs.current[i + 1]?.focus()
   }
 
   const handleKeyDown = (i, e) => {
@@ -37,16 +37,16 @@ export default function OTP() {
   }
 
   const handlePaste = (e) => {
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
-    if (pasted.length === 6) {
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8)
+    if (pasted.length === 8) {
       setCode(pasted.split(''))
-      inputs.current[5]?.focus()
+      inputs.current[7]?.focus()
     }
   }
 
   const handleVerify = async () => {
     const full = code.join('')
-    if (full.length < 6) { setError('Ingresa el código completo'); return }
+    if (full.length < 8) { setError('Ingresa el código completo'); return }
     setLoading(true)
     setError('')
     const { data, error: verifyError } = await supabase.auth.verifyOtp({
@@ -57,7 +57,7 @@ export default function OTP() {
     setLoading(false)
     if (verifyError) {
       setError('Código incorrecto o expirado. Intenta de nuevo.')
-      setCode(['', '', '', '', '', ''])
+      setCode(['', '', '', '', '', '', '', ''])
       inputs.current[0]?.focus()
       return
     }
@@ -96,7 +96,7 @@ export default function OTP() {
           Código de verificación
         </h1>
         <p className="text-[var(--color-on-surface-variant)] text-sm leading-relaxed">
-          Enviamos un código de 6 dígitos a<br />
+          Enviamos un código de 8 dígitos a<br />
           <span className="font-semibold text-[var(--color-on-surface)]">{phone ?? '---'}</span>
         </p>
       </div>
