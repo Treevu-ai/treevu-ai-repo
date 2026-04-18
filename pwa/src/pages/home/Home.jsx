@@ -228,12 +228,11 @@ export default function Home() {
   const isPulling     = useRef(false)
 
   useEffect(() => {
-    loadEmployee().finally(() => {
-      setLoading(false)
-      if (!localStorage.getItem(TIP_KEY) && (employee?.advanceCount ?? 0) === 0) {
-        setShowTip(true)
-      }
-    })
+    loadEmployee().then(() => {
+      if (!localStorage.getItem(TIP_KEY)) setShowTip(true)
+    }).catch(() => {
+      navigate('/login', { replace: true })
+    }).finally(() => setLoading(false))
   }, [])
 
   const dismissTip = useCallback(() => {

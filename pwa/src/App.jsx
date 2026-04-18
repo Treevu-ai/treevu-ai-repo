@@ -46,8 +46,11 @@ function ProtectedRoute({ children }) {
   const session     = useAuthStore((s) => s.session)
   const initialized = useAuthStore((s) => s.initialized)
 
-  // Wait until Supabase session is restored before deciding
-  if (!initialized) return null
+  if (!initialized) return (
+    <div className="app-container flex items-center justify-center min-h-dvh bg-[var(--color-surface)]">
+      <span className="material-symbols-outlined text-[var(--color-primary)] text-4xl animate-spin">progress_activity</span>
+    </div>
+  )
 
   if (!session) return <Navigate to="/login" replace />
   return children
