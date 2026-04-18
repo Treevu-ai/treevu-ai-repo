@@ -130,7 +130,7 @@ export default function OTP() {
       {error && <p className="text-center text-[var(--color-error)] text-sm mb-4">{error}</p>}
 
       <div className="flex flex-col gap-4 mt-auto pb-10">
-        <Button onClick={handleVerify} loading={loading} disabled={code.join('').length < 6}>
+        <Button onClick={handleVerify} loading={loading} disabled={code.join('').length < 8}>
           Verificar código
         </Button>
 
