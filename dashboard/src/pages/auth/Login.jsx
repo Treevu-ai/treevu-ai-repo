@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthStore, MOCK_AUTH } from '../../store/useAuthStore'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
+import { isDemoMode } from '../../lib/runtime'
 
 export default function Login() {
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const { login, loading, error, clearError } = useAuthStore()
   const navigate = useNavigate()
-
-  const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_DEMO_MODE === 'true'
 
   async function handleSubmit(e) {
     e.preventDefault()

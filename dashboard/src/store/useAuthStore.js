@@ -1,12 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
+import { assertLiveConfig, hasSupabaseConfig, isDemoMode } from '../lib/runtime'
 
-// In demo mode (no Supabase), pre-populate state with mock auth so pages render without login
-const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_DEMO_MODE === 'true'
-const INITIAL_AUTH = isDemoMode
-  ? { user: null, employerUser: null, company: null } // will be injected by MOCK_AUTH below
-  : { user: null, employerUser: null, company: null }
+if (!isDemoMode) {
+  assertLiveConfig('No se puede iniciar el dashboard en modo real sin VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY.')
+}
 
 export const useAuthStore = create(
   persist(
@@ -20,6 +19,23 @@ export const useAuthStore = create(
       // --- Actions ---
 
       async login(email, password) {
+        if (isDemoMode) {
+          set({
+            user: MOCK_AUTH.user,
+            employerUser: MOCK_AUTH.employerUser,
+            company: MOCK_AUTH.company,
+            loading: false,
+            error: null,
+          })
+          return { ok: true }
+        }
+
+        if (!hasSupabaseConfig) {
+          const error = 'Faltan variables de Supabase. Configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY.'
+          set({ loading: false, error })
+          return { ok: false, error }
+        }
+
         set({ loading: true, error: null })
         try {
           const { data, error } = await supabase.auth.signInWithPassword({ email, password })
@@ -48,11 +64,16 @@ export const useAuthStore = create(
       },
 
       async logout() {
-        await supabase.auth.signOut()
+        if (!isDemoMode && hasSupabaseConfig) {
+          await supabase.auth.signOut()
+        }
         set({ user: null, employerUser: null, company: null })
       },
 
       async refreshSession() {
+        if (isDemoMode || !hasSupabaseConfig) {
+          return
+        }
         const { data } = await supabase.auth.getSession()
         if (!data.session) return set({ user: null })
         if (!get().employerUser) {
