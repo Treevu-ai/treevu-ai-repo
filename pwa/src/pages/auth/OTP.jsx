@@ -7,8 +7,8 @@ import { supabase } from '@/lib/supabase'
 export default function OTP() {
   const navigate = useNavigate()
   const phone = useAuthStore((s) => s.phone)
-  const setPinCreated = useAuthStore((s) => s.setPinCreated)
   const pinCreated = useAuthStore((s) => s.pinCreated)
+
   const [code, setCode] = useState(['', '', '', '', '', '', '', ''])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -40,28 +40,36 @@ export default function OTP() {
     const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8)
     if (pasted.length === 8) {
       setCode(pasted.split(''))
+      setError('')
       inputs.current[7]?.focus()
     }
   }
 
   const handleVerify = async () => {
     const full = code.join('')
-    if (full.length < 8) { setError('Ingresa el código completo'); return }
+    if (full.length < 8) {
+      setError('Ingresa el código completo')
+      return
+    }
+
     setLoading(true)
     setError('')
-    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+
+    const { error: verifyError } = await supabase.auth.verifyOtp({
       email: phone,
       token: full,
       type: 'email',
     })
+
     setLoading(false)
+
     if (verifyError) {
       setError('Código incorrecto o expirado. Intenta de nuevo.')
       setCode(['', '', '', '', '', '', '', ''])
       inputs.current[0]?.focus()
       return
     }
-    // Session is now set — auth listener in useAuthStore picks it up
+
     if (pinCreated) {
       navigate('/home', { replace: true })
     } else {
@@ -72,7 +80,10 @@ export default function OTP() {
   const handleResend = async () => {
     setResendTimer(30)
     setError('')
-    await supabase.auth.signInWithOtp({ email: phone, options: { shouldCreateUser: false } })
+    await supabase.auth.signInWithOtp({
+      email: phone,
+      options: { shouldCreateUser: false },
+    })
   }
 
   return (
@@ -95,36 +106,40 @@ export default function OTP() {
         >
           Código de verificación
         </h1>
+
         <p className="text-[var(--color-on-surface-variant)] text-sm leading-relaxed">
-          Enviamos un código de 8 dígitos a<br />
+          Enviamos un código de 8 dígitos a
+          <br />
           <span className="font-semibold text-[var(--color-on-surface)]">{phone ?? '---'}</span>
         </p>
       </div>
 
       {/* OTP inputs */}
-      <div className="flex gap-2 justify-center py-8" onPaste={handlePaste}>
-        {code.map((d, i) => (
-          <input
-            key={i}
-            ref={(el) => (inputs.current[i] = el)}
-            type="text"
-            inputMode="numeric"
-            maxLength={1}
-            value={d}
-            onChange={(e) => handleChange(i, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(i, e)}
-            className={`
-              w-12 h-14 rounded-[var(--radius-lg)] text-center text-xl font-bold
-              bg-[var(--color-surface-container-high)]
-              text-[var(--color-on-surface)]
-              focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]
-              focus:bg-[var(--color-surface-container-lowest)]
-              transition-all duration-150
-              ${d ? 'bg-[var(--color-primary-fixed)] text-[var(--color-primary)]' : ''}
-              ${error ? 'ring-1 ring-[var(--color-error)]' : ''}
-            `}
-          />
-        ))}
+      <div className="py-8" onPaste={handlePaste}>
+        <div className="grid grid-cols-8 gap-1.5 max-w-[320px] mx-auto">
+          {code.map((d, i) => (
+            <input
+              key={i}
+              ref={(el) => (inputs.current[i] = el)}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={d}
+              onChange={(e) => handleChange(i, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(i, e)}
+              className={`
+                w-full h-12 rounded-[var(--radius-lg)] text-center text-lg font-bold
+                bg-[var(--color-surface-container-high)]
+                text-[var(--color-on-surface)]
+                focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]
+                focus:bg-[var(--color-surface-container-lowest)]
+                transition-all duration-150
+                ${d ? 'bg-[var(--color-primary-fixed)] text-[var(--color-primary)]' : ''}
+                ${error ? 'ring-1 ring-[var(--color-error)]' : ''}
+              `}
+            />
+          ))}
+        </div>
       </div>
 
       {error && <p className="text-center text-[var(--color-error)] text-sm mb-4">{error}</p>}
@@ -139,10 +154,11 @@ export default function OTP() {
           onClick={handleResend}
           className="text-center text-sm text-[var(--color-on-surface-variant)] disabled:opacity-50"
         >
-          {resendTimer > 0
-            ? `Reenviar código en ${resendTimer}s`
-            : <span className="text-[var(--color-primary)] font-medium">Reenviar código</span>
-          }
+          {resendTimer > 0 ? (
+            `Reenviar código en ${resendTimer}s`
+          ) : (
+            <span className="text-[var(--color-primary)] font-medium">Reenviar código</span>
+          )}
         </button>
       </div>
     </div>
