@@ -4,6 +4,7 @@ import Card from '@/components/ui/Card'
 import PulseBar from '@/components/ui/PulseBar'
 import Button from '@/components/ui/Button'
 import Skeleton from '@/components/ui/Skeleton'
+import { useAuthStore } from '@/store/useAuthStore'
 import { useEWAStore } from '@/store/useEWAStore'
 import { haptics } from '@/utils/haptic'
 
