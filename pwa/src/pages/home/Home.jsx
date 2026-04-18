@@ -73,8 +73,8 @@ function SalaryBreakdown({ employee }) {
   const used = employee.earnedWage - employee.availableAdvance
   const pending = employee.baseSalary - employee.earnedWage
 
-  const usedPct    = (used / employee.baseSalary) * 100
-  const availPct   = (employee.availableAdvance / employee.baseSalary) * 100
+  const usedPct = (used / employee.baseSalary) * 100
+  const availPct = (employee.availableAdvance / employee.baseSalary) * 100
   const pendingPct = (pending / employee.baseSalary) * 100
 
   return (
@@ -216,16 +216,17 @@ export default function Home() {
   const employee = useEWAStore((s) => s.employee)
   const loadEmployee = useEWAStore((s) => s.loadEmployee)
   const storeLoading = useEWAStore((s) => s.loading)
+  const storeError = useEWAStore((s) => s.error)
   const transactions = useEWAStore((s) => s.transactions)
 
-  const [loading, setLoading]       = useState(true)
-  const [showTip, setShowTip]       = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [showTip, setShowTip] = useState(false)
   const [pullDistance, setPullDist] = useState(0)
   const [refreshing, setRefreshing] = useState(false)
 
-  const containerRef  = useRef(null)
-  const touchStartY   = useRef(0)
-  const isPulling     = useRef(false)
+  const containerRef = useRef(null)
+  const touchStartY = useRef(0)
+  const isPulling = useRef(false)
 
   useEffect(() => {
     loadEmployee().then(() => {
@@ -271,8 +272,32 @@ export default function Home() {
     }
   }, [pullDistance])
 
-  if (loading || !employee) return <HomeSkeleton />
+  if (loading) return <HomeSkeleton />
 
+  if (!employee) {
+    const message = storeError || 'No encontramos tu perfil de colaborador para esta cuenta.'
+    return (
+      <div className="app-container bg-[var(--color-surface)] min-h-dvh flex items-center justify-center px-6">
+        <Card className="w-full max-w-md p-6 text-center space-y-4">
+          <div className="w-12 h-12 rounded-full bg-[var(--color-error-container)] mx-auto flex items-center justify-center">
+            <span className="material-symbols-outlined text-[var(--color-error)]">person_off</span>
+          </div>
+          <h1
+            className="text-[var(--color-on-surface)] font-bold text-lg"
+            style={{ fontFamily: 'var(--font-headline)' }}
+          >
+            No pudimos cargar tu inicio
+          </h1>
+          <p className="text-sm text-[var(--color-on-surface-variant)] leading-relaxed">
+            {message}
+          </p>
+          <div className="flex flex-col gap-2">
+            <Button onClick={() => window.location.reload()}>Reintentar</Button>
+          </div>
+        </Card>
+      </div>
+    )
+  }
   const recentTx = transactions.slice(0, 3)
 
   return (
