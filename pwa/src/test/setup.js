@@ -1,5 +1,4 @@
-@'
-  import '@testing-library/jest-dom/vitest'
+import '@testing-library/jest-dom/vitest'
 import { beforeEach, vi } from 'vitest'
 import { resetSupabaseMocks, supabaseMock } from '@/test/mocks/supabase'
 
@@ -44,4 +43,3 @@ ensureStorageApi('sessionStorage')
 beforeEach(() => {
   resetSupabaseMocks()
 })
-'@ | Set-Content -Path "pwa/src/test/setup.js" -Encoding utf8
