@@ -1,7 +1,25 @@
-import { useEffect } from 'react'
+import { useEffect, Component } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/useAuthStore'
 import AppShell from '@/components/layout/AppShell'
+
+class ErrorBoundary extends Component {
+  state = { error: null }
+  static getDerivedStateFromError(error) { return { error } }
+  render() {
+    if (this.state.error) return (
+      <div className="flex flex-col items-center justify-center min-h-dvh gap-4 p-6 text-center">
+        <span className="material-symbols-outlined text-4xl text-red-400">error</span>
+        <p className="font-bold text-lg">Algo salió mal</p>
+        <p className="text-sm text-gray-500 font-mono break-all">{this.state.error.message}</p>
+        <button onClick={() => window.location.reload()} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">
+          Reintentar
+        </button>
+      </div>
+    )
+    return this.props.children
+  }
+}
 
 // Auth
 import Login from '@/pages/auth/Login'
@@ -63,6 +81,7 @@ export default function App() {
   useEffect(() => { initialize() }, [])
 
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <Routes>
         {/* Public */}
@@ -97,5 +116,6 @@ export default function App() {
         <Route path="*"  element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
+    </ErrorBoundary>
   )
 }

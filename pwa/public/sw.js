@@ -1,4 +1,4 @@
-const CACHE_NAME = 'treevu-v1'
+const CACHE_NAME = 'treevu-v3'
 
 const STATIC_ASSETS = [
   '/',
